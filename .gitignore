@@ -79,6 +79,7 @@ gradle.log
 *.jks
 application-*.yml
 application-*.properties
+application.properties
  
 # Docker
 docker-compose.override.yml
