@@ -2,6 +2,9 @@ package fr.patedor.PFR_Equipe.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -31,6 +34,7 @@ public class Plat {
 	@JoinColumn(name = "id_categorie")
 	private Categorie categorie;
 	
+	@JsonBackReference
 	@OneToMany(mappedBy = "plat")
 	private List<AssoCommandesPlats> assoCommandesPlats;
 

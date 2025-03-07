@@ -2,6 +2,8 @@ package fr.patedor.PFR_Equipe.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -28,6 +30,7 @@ public class Commande {
 	
 	private String statut;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "commande")
     private List<AssoCommandesPlats> assoCommandesPlats;
 	
