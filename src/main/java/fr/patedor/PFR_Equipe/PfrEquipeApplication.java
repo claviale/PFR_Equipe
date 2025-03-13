@@ -1,6 +1,5 @@
 package fr.patedor.PFR_Equipe;
 
-import fr.patedor.PFR_Equipe.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
