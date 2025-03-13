@@ -49,17 +49,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authHeader.substring(7);// 7 correspond à Bearer
 
         // Vérification de l'utilisateur
-        final String userEmail = jwtService.extractUserName(jwt);// Extraire du jeton JWT
+        final String userLogin = jwtService.extractUserName(jwt);// Extraire du jeton JWT
         // Validation des données par rapport à la DB
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (userLogin != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // Check in DB
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userLogin);
             // Validation du jeton JWT
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 // Gestion du contexte de sécurité de l’utilisateur
                 // Création d'un nouveau jeton avec les informations et les rôles de
                 // l'utilisateur
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userEmail, null,
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userLogin, null,
                         userDetails.getAuthorities());
                 // Transmettre les détails de la demande d’origine
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
