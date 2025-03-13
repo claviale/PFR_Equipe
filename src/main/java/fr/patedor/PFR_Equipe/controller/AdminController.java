@@ -57,7 +57,8 @@ public class AdminController {
                 .nom(utilisateur.getNom())
                 .prenom(utilisateur.getPrenom())
                 .login(utilisateur.getLogin())
-                .email("default")
+                .email(utilisateur.getEmail())
+                .telephone(utilisateur.getTelephone())
                 .mdp("password")
                 .role(new Role("EMP", "Employé"))
                 .build();

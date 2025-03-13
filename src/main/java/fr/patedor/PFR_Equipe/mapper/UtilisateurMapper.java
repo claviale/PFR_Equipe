@@ -8,12 +8,15 @@ import org.springframework.stereotype.Component;
 public class UtilisateurMapper {
 
     public UtilisateurDTO toDTO(Utilisateur utilisateur) {
-        UtilisateurDTO result = new UtilisateurDTO();
-        result.setId(utilisateur.getId());
-        result.setNom(utilisateur.getNom());
-        result.setPrenom(utilisateur.getPrenom());
-        result.setLogin(utilisateur.getLogin());
-        return result;
+        return UtilisateurDTO.builder()
+                .id(utilisateur.getId())
+                .nom(utilisateur.getNom())
+                .prenom(utilisateur.getPrenom())
+                .login(utilisateur.getLogin())
+                .email(utilisateur.getEmail())
+                .telephone(utilisateur.getTelephone())
+                .mdp(utilisateur.getMdp())
+                .build();
     }
 
     public Utilisateur toEntity(UtilisateurDTO utilisateurDTO){
@@ -22,6 +25,9 @@ public class UtilisateurMapper {
                 .nom(utilisateurDTO.getNom())
                 .prenom(utilisateurDTO.getPrenom())
                 .login(utilisateurDTO.getLogin())
+                .email(utilisateurDTO.getEmail())
+                .telephone(utilisateurDTO.getTelephone())
+                .mdp(utilisateurDTO.getMdp())
                 .build();
     }
 
