@@ -1,7 +1,5 @@
 package fr.patedor.PFR_Equipe.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -24,7 +22,6 @@ public class AssoCommandesPlats {
 	@Id @GeneratedValue
 	private Integer id;
 	
-	@JsonBackReference
 	@ManyToOne
     @JoinColumn(name = "id_commande")
     private Commande commande;
@@ -33,5 +30,20 @@ public class AssoCommandesPlats {
     @JoinColumn(name = "id_plat")
     private Plat plat;
 
-    private Integer quantite; 
+    private Integer quantite;
+
+	public void setLibelleCategorie(String libelle) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setNomPlat(String nom) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setPrix(Float prix) {
+		// TODO Auto-generated method stub
+		
+	} 
 }
