@@ -14,17 +14,4 @@ public class RestaurantDTO {
     private String nom;
     private String adresse;
 
-    public RestaurantDTO(Restaurant restaurant) {
-        this.id = restaurant.getId();
-        this.nom = restaurant.getNom();
-        this.adresse = restaurant.getAdresse();
-    }
-
-    public Restaurant toEntity() {
-        return Restaurant.builder()
-                .id(id)
-                .nom(nom)
-                .adresse(adresse)
-                .build();
-    }
 }

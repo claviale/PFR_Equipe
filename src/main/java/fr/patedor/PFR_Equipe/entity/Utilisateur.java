@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Utilisateur {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String nom;
@@ -23,8 +23,7 @@ public class Utilisateur {
     private String login;
     private String email;
     private String telephone;
-    private byte[] mdp;
-    private byte[] salt;
+    private String mdp;
     private String token;
 
     @ManyToOne

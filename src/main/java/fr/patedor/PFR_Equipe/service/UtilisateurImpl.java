@@ -17,12 +17,8 @@ public class UtilisateurImpl implements UtilisateurService{
     UtilisateurRepository utilisateurRepository;
 
     @Override
-    public List<UtilisateurDTO> findFromRestaurant(Integer id) {
-        List<UtilisateurDTO> utilisateurs = new ArrayList<>();
-        for(Utilisateur cur : utilisateurRepository.findFromRestaurant(id)){
-            utilisateurs.add(new UtilisateurDTO(cur));
-        }
-        return utilisateurs;
+    public List<Utilisateur> findFromRestaurant(Integer id) {
+        return utilisateurRepository.findFromRestaurant(id);
     }
 
     @Override
