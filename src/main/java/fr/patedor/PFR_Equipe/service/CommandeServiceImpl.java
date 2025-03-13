@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import fr.patedor.PFR_Equipe.dto.CommandeDto;
 import fr.patedor.PFR_Equipe.entity.Commande;
 import fr.patedor.PFR_Equipe.repository.CommandeRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class CommandeServiceImpl implements CommandeService {

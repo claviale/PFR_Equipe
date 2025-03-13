@@ -1,6 +1,5 @@
 package fr.patedor.PFR_Equipe.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,8 +19,7 @@ public class TableRestaurant {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idRestaurant;
+	private Integer id;
 	
 	private Integer nb_places;
 	private Integer numero_table;

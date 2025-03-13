@@ -17,6 +17,7 @@ public class CommandeDto {
 	
 	private Integer idCommande;
 	private String statut;
+	private Integer idReservation;
 	private List<AssoCommandesPlatsDto> assoCommandesPlatsDto;
 	
 	
