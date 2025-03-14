@@ -2,6 +2,7 @@ package fr.patedor.PFR_Equipe.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "asso_commandes_plats")
 public class AssoCommandesPlats {
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@ManyToOne
@@ -32,18 +33,11 @@ public class AssoCommandesPlats {
 
     private Integer quantite;
 
-	public void setLibelleCategorie(String libelle) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setNomPlat(String nom) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void setPrix(Float prix) {
 		// TODO Auto-generated method stub
 		
-	} 
+	}
+
+	
+	
 }

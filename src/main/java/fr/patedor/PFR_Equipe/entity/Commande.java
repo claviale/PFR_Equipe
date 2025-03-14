@@ -1,5 +1,6 @@
 package fr.patedor.PFR_Equipe.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -30,7 +31,7 @@ public class Commande {
 	private String statut;
 	
 	@OneToMany(mappedBy = "commande")
-    private List<AssoCommandesPlats> assoCommandesPlats;
+    private List<AssoCommandesPlats> assoCommandesPlats = new ArrayList<>();
 	
 	
 	

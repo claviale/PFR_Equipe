@@ -20,8 +20,4 @@ public class CommandeDto {
 	private Integer idReservation;
 	private List<AssoCommandesPlatsDto> assoCommandesPlatsDto;
 	
-	
-
-	
-
 }

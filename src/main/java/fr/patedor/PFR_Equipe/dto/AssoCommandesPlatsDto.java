@@ -1,5 +1,6 @@
 package fr.patedor.PFR_Equipe.dto;
 
+import fr.patedor.PFR_Equipe.entity.Plat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AssoCommandesPlatsDto {
-	private String libelleCategorie;
-	private String nomPlat;
+    private Plat plat;
 	private Integer quantite;
 	private Float prix;
 }

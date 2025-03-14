@@ -20,13 +20,11 @@ public class CommandeServiceImpl implements CommandeService {
 	@Override
 	public void create(Commande commande) {
 		repo.save(commande);
-		
 	}
 
 	@Override
 	public void update(Commande commande) {
-		// TODO Auto-generated method stub
-		
+		repo.save(commande);
 	}
 
 	@Override
@@ -41,8 +39,8 @@ public class CommandeServiceImpl implements CommandeService {
 	}
 
 	@Override
-	public Optional<Commande> getById(Integer id) {
-		return repo.findById(id);
+	public Commande getById(Integer id) {
+		return repo.findById(id).orElse(null);
 	}
 	
 	

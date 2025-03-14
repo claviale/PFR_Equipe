@@ -9,7 +9,7 @@ public class RestaurantMapper {
 
     public RestaurantDTO toDTO(Restaurant restaurant) {
         RestaurantDTO result = new RestaurantDTO();
-        result.setId(restaurant.getId());
+        result.setId(restaurant.getIdRestaurant());
         result.setNom(restaurant.getNom());
         result.setAdresse(restaurant.getAdresse());
         return result;
@@ -17,7 +17,7 @@ public class RestaurantMapper {
 
     public Restaurant toEntity(RestaurantDTO restaurantDTO) {
         return Restaurant.builder()
-                .id(restaurantDTO.getId())
+                .idRestaurant(restaurantDTO.getId())
                 .nom(restaurantDTO.getNom())
                 .adresse(restaurantDTO.getAdresse())
                 .build();

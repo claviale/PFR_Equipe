@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RestaurantImpl implements RestaurantService{
+public class RestaurantServiceImpl implements RestaurantService{
 
     @Autowired
     RestaurantRepository restaurantRepository;
@@ -24,4 +24,10 @@ public class RestaurantImpl implements RestaurantService{
         Optional<Restaurant> restaurant = restaurantRepository.findById(idRestaurant);
         return restaurant;
     }
+    
+    @Override
+    public Restaurant getRestaurantById(Integer idRestaurant) {
+        return restaurantRepository.findById(idRestaurant).orElse(null);
+    }
+
 }

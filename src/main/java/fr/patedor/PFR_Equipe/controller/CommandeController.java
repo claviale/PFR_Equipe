@@ -6,17 +6,23 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.patedor.PFR_Equipe.dto.CommandeDto;
+import fr.patedor.PFR_Equipe.entity.AssoCommandesPlats;
 import fr.patedor.PFR_Equipe.entity.Commande;
+import fr.patedor.PFR_Equipe.entity.Plat;
 import fr.patedor.PFR_Equipe.entity.Reservation;
 import fr.patedor.PFR_Equipe.mapper.CommandeMapper;
+import fr.patedor.PFR_Equipe.service.AssoCommandesPlatsService;
 import fr.patedor.PFR_Equipe.service.CommandeService;
+import fr.patedor.PFR_Equipe.service.PlatService;
 import fr.patedor.PFR_Equipe.service.ReservationService;
 
 @RestController
@@ -28,6 +34,12 @@ public class CommandeController {
 	
 	@Autowired
 	ReservationService reservationService;
+	
+	@Autowired
+	PlatService platService;
+	
+	@Autowired
+	AssoCommandesPlatsService assoService;
 	
 	@Autowired
 	CommandeMapper commandeMapper;
@@ -50,18 +62,50 @@ public class CommandeController {
 		
 	//	return ResponseEntity.ok();
 	//}
-	
+
+	// Créer une nouvelle commande vide avec un statut "en cours", un numéro de réservation d'après une table
+	// http://localhost:8080/commandes?table=1
 	@PostMapping
-	public ResponseEntity<Commande> create(@RequestParam("table") Integer idTable ){
-		// id table on récup la résa associée : selectbyidtable (custom select)
+	public ResponseEntity<CommandeDto> create(@RequestParam("table") Integer idTable ){
 		Reservation resa = reservationService.getByTableId(idTable);
 		Commande commande = new Commande();
+		commande.setStatut("En cours");
 		commande.setReservation(resa);
 		commandeService.create(commande);
 		
-		return ResponseEntity.ok(commande);
+		CommandeDto commandeDto = commandeMapper.toDto(commande);
+		
+		return ResponseEntity.ok(commandeDto);
 	}
 	
-	//@putMapping commandes id pour bouton commande
+	@PutMapping("/{id}")
+	public ResponseEntity<CommandeDto> update(@PathVariable("id") Integer id, @RequestBody CommandeDto commandeDto) {
+	   
+	    Commande commande = commandeService.getById(id);
+	    commande.setStatut(commandeDto.getStatut());
+	    
+	    List<AssoCommandesPlats> platsAjoutes = commandeDto.getAssoCommandesPlatsDto().stream()
+	        .map(platDto -> {
+	            AssoCommandesPlats assoCommandePlat = new AssoCommandesPlats();
+	            
+	            Plat plat = platService.getByNom(platDto.getPlat().getNom()); 
+	            assoCommandePlat.setPlat(plat);
+	            
+	            assoCommandePlat.setQuantite(platDto.getQuantite());
+	            assoCommandePlat.setPrix(plat.getPrix());
+	            
+	            assoCommandePlat.setCommande(commande); 
+	            assoService.create(assoCommandePlat);
+	            
+	            return assoCommandePlat;
+	        })
+	        .collect(Collectors.toList());
+	    
+	    commande.setAssoCommandesPlats(platsAjoutes);
+	    commandeService.update(commande);
+	   
+	    CommandeDto commandeDTO = commandeMapper.toDto(commande);
+	    return ResponseEntity.ok(commandeDTO);
+	}
 	
 }
