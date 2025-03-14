@@ -1,16 +1,11 @@
 package fr.patedor.PFR_Equipe.entity;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity @Table(name = "plats")
 public class Plat {
 	
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nom;
 	private Float prix;
@@ -33,5 +28,6 @@ public class Plat {
 	@ManyToOne
 	@JoinColumn(name = "id_categorie")
 	private Categorie categorie;
+
 
 }
