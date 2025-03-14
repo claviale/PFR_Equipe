@@ -16,18 +16,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity @Table(name = "plats")
-public class Plat {
-	
+@Entity
+@Table(name = "asso_commandes_plats")
+public class AssoCommandesPlats {
+
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private String nom;
-	private Float prix;
-	private String description;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_categorie")
-	private Categorie categorie;
+	@JoinColumn(name = "id_commande")
+	private Commande commande;
 
+    @ManyToOne
+    @JoinColumn(name = "id_plat")
+    private Plat plat;
 
+    private Integer quantite;
+    
+    public void setPrix(Float prix) {	
+	}
 }

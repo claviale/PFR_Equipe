@@ -1,25 +1,30 @@
 package fr.patedor.PFR_Equipe.entity;
 
-import jakarta.persistence.*;
+import java.time.LocalTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalTime;
-
 @Data
 @NoArgsConstructor
-@Entity
-@Table(name = "horaires")
+@AllArgsConstructor
+@Builder
+@Entity @Table(name = "horaires")
 public class Horaire {
+	
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(length = 8)
-    private String jour;
-
-    private LocalTime ouverture;
-    private LocalTime fermeture;
-
+	private String jour;
+	private LocalTime ouverture;
+	private LocalTime fermeture;
+	
 }
+

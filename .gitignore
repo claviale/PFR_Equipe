@@ -77,6 +77,7 @@ gradle.log
 application-*.yml
 application-*.properties
 application.properties
+src/main/resources/application.properties
  
 # Docker
 docker-compose.override.yml
