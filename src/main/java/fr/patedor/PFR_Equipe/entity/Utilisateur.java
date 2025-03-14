@@ -1,6 +1,8 @@
 package fr.patedor.PFR_Equipe.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,16 +15,19 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
-@Table(name = "utilisateurs")
-public class Utilisateur implements UserDetails {
+@Table(name = "employes")
+public class Utilisateur {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String nom;
     private String prenom;
+    private String login;
     private String email;
     private String telephone;
     private String login;
