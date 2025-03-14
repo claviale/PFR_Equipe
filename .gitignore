@@ -24,8 +24,6 @@ logs/
 *.out
  
 # Temporary files
-tmp/
-*.swp
 *.swo
  
 # IDE-specific files (IntelliJ IDEA, Eclipse, NetBeans, VS Code)
@@ -35,7 +33,6 @@ tmp/
 *.iws
 .classpath
 .project
-.settings/
 .vscode/
  
 # Maven
@@ -188,12 +185,6 @@ cmake-build-*/
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
-
-# File-based project format
-*.iws
-
-# IntelliJ
-out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
