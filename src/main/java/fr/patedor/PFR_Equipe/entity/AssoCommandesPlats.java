@@ -24,20 +24,15 @@ public class AssoCommandesPlats {
 	private Integer id;
 	
 	@ManyToOne
-    @JoinColumn(name = "id_commande")
-    private Commande commande;
+	@JoinColumn(name = "id_commande")
+	private Commande commande;
 
     @ManyToOne
     @JoinColumn(name = "id_plat")
     private Plat plat;
 
     private Integer quantite;
-
-	public void setPrix(Float prix) {
-		// TODO Auto-generated method stub
-		
+    
+    public void setPrix(Float prix) {	
 	}
-
-	
-	
 }

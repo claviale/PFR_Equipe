@@ -37,22 +37,22 @@ public class PlatServiceImpl implements PlatService {
 	@Override
 	public Plat getByNom(String nom) {
 		return platRepo.findByNom(nom); 
-		}
+	}
 
 	@Override
 	public Map<String, List<Plat>> getPlatsByRestaurant(Integer restaurantId) {
         Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
         Carte carte = restaurant.getCarte();
-
+        
         if (carte != null) {
-            Map<String, List<Plat>> platsParCategorie = new HashMap<>();
-
-            for (Plat plat : carte.getPlats()) {
-                String categorieLibelle = plat.getCategorie().getLibelle();
-                platsParCategorie.computeIfAbsent(categorieLibelle, k -> new ArrayList<>()).add(plat);
-            }
-            return platsParCategorie;
-        }
-        return Collections.emptyMap(); 
-    }
+        	Map<String, List<Plat>> platsParCategorie = new HashMap<>();
+        	
+        	for (Plat plat : carte.getPlats()) {
+        		String categorieLibelle = plat.getCategorie().getLibelle();
+        		platsParCategorie.computeIfAbsent(categorieLibelle, k -> new ArrayList<>()).add(plat);
+        		}
+        	return platsParCategorie;
+        	}
+        return Collections.emptyMap();
+	}
 }

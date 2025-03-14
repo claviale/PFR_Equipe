@@ -45,12 +45,10 @@ public class CommandeMapper {
 		            .collect(Collectors.toList());
 		
 		commandeDto.setAssoCommandesPlatsDto(listeCmdPlatDto);
-				
 		return commandeDto;
 	}
 	
 	public Commande toEntity(CommandeDto commandeDto) {
-		
 		Commande commande = new Commande();
 		commande.setId(commandeDto.getIdCommande());
 		commande.setStatut(commandeDto.getStatut());
@@ -69,8 +67,7 @@ public class CommandeMapper {
 		            })
 		            .collect(Collectors.toList());
 
-		        commande.setAssoCommandesPlats(listeCmdPlat);
-				
-		return commande;
+		 commande.setAssoCommandesPlats(listeCmdPlat);
+		 return commande;
 	}
 }

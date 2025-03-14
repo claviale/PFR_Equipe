@@ -55,16 +55,6 @@ public class CommandeController {
 		return ResponseEntity.ok(commandesDto);
 	}
 	
-	//Retourne tous les plats par libellés qui correspondent au restaurant
-	
-	//@GetMapping("/choix")
-	//public ResponseEntity<List<CommandeDto>> getAllPlats() {
-		
-	//	return ResponseEntity.ok();
-	//}
-
-	// Créer une nouvelle commande vide avec un statut "en cours", un numéro de réservation d'après une table
-	// http://localhost:8080/commandes?table=1
 	@PostMapping
 	public ResponseEntity<CommandeDto> create(@RequestParam("table") Integer idTable ){
 		Reservation resa = reservationService.getByTableId(idTable);

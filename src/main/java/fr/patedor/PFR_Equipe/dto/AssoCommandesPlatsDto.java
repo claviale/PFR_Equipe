@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AssoCommandesPlatsDto {
-    private Plat plat;
+	private Plat plat;
 	private Integer quantite;
 	private Float prix;
 }

@@ -31,7 +31,7 @@ public class Commande {
 	private String statut;
 	
 	@OneToMany(mappedBy = "commande")
-    private List<AssoCommandesPlats> assoCommandesPlats = new ArrayList<>();
+	private List<AssoCommandesPlats> assoCommandesPlats = new ArrayList<>();
 	
 	
 	

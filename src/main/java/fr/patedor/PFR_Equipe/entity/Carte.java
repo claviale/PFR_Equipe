@@ -36,9 +36,5 @@ public class Carte {
 			inverseJoinColumns = {@JoinColumn(name = "id_plat")}
 	)
 	private List<Plat> plats;
-	
-	@Transient
-    private Map<Categorie, List<Plat>> platsGroupedByCategory;
-
 
 }

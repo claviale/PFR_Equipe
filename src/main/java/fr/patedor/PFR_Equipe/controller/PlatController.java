@@ -22,8 +22,8 @@ public class PlatController {
 	
 	
 	@GetMapping("/{idRestaurant}")
-    public ResponseEntity<Map<String, List<Plat>>> getPlatsByCategorie(@PathVariable("idRestaurant") Integer idRestaurant) {
-        Map<String, List<Plat>> platsParCategorie = platService.getPlatsByRestaurant(idRestaurant);
-        return ResponseEntity.ok(platsParCategorie);
+	public ResponseEntity<Map<String, List<Plat>>> getPlatsByCategorie(@PathVariable("idRestaurant") Integer idRestaurant) {
+		Map<String, List<Plat>> platsParCategorie = platService.getPlatsByRestaurant(idRestaurant);
+		return ResponseEntity.ok(platsParCategorie);
     }
 }
