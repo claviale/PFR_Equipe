@@ -12,19 +12,18 @@ import fr.patedor.PFR_Equipe.repository.ReservationRepository;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-	/*@Autowired
-	ReservationRepository repo;
-	
-	@Override
+    @Autowired
+    private ReservationRepository reservationRepository;
+    
+    @Override
 	public void create(Reservation reservation) {
 		// TODO Auto-generated method stub
-		repo.save(reservation);
+    	reservationRepository.save(reservation);
 	}
+    
+    public List<Reservation> getAllReservationsForRestaurant(Integer idRestaurant) {
+        return reservationRepository.findAllByRestaurant(idRestaurant);
+    }
 
-	@Override
-	public List<Reservation> getAllByRestaurant(Restaurant restaurant) {
-		// TODO Auto-generated method stub
-		return repo.findAllByRestaurant(restaurant);
-	}
-*/
+
 }

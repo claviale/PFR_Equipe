@@ -1,5 +1,6 @@
 package fr.patedor.PFR_Equipe.entity;
 
+
 import java.time.LocalTime;
 
 import jakarta.persistence.Entity;
