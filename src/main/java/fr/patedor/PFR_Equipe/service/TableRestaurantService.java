@@ -7,5 +7,7 @@ import fr.patedor.PFR_Equipe.entity.TableRestaurant;
 
 public interface TableRestaurantService {
 	
-	//public List<TableRestaurant> getAllByRestaurant(Restaurant restaurant);
+	public List<TableRestaurant> getAllByRestaurant(Restaurant restaurant);
+	
+	TableRestaurant selectByNumeroTableAndIdRestaurant(Integer numero, Integer idRestaurant);
 }
