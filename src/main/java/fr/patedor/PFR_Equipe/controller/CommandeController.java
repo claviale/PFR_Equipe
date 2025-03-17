@@ -104,7 +104,7 @@ public class CommandeController {
 	    return ResponseEntity.ok(commandeDTO);
 	}
 	
-	// Afficher les détails d'une commande lors du clic sur une table
+	// Afficher les détails d'une commande (clic sur la table ou lors de la facturation)
 	@GetMapping("/{id}")
 	public ResponseEntity<CommandeDto> getCommande(@PathVariable("id") Integer id) {
 		Commande commande = commandeService.getById(id);
