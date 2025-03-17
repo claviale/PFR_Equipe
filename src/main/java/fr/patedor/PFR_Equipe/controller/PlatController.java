@@ -20,7 +20,7 @@ public class PlatController {
 	@Autowired
 	PlatService platService;
 	
-	
+	// Affiche les plats disponibles pour un restaurant
 	@GetMapping("/{idRestaurant}")
 	public ResponseEntity<Map<String, List<Plat>>> getPlatsByCategorie(@PathVariable("idRestaurant") Integer idRestaurant) {
 		Map<String, List<Plat>> platsParCategorie = platService.getPlatsByRestaurant(idRestaurant);
