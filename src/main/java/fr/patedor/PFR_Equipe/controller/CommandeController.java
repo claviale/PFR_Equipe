@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,19 @@ public class CommandeController {
 	CommandeMapper commandeMapper;
 	
 	// SALLE
+	
+	// Afficher toutes les commandes
+	@GetMapping
+	public ResponseEntity<List<CommandeDto>> getAll() {
+		List<Commande> commandes = commandeService.getAll();
+		List<CommandeDto> commandesDto = commandes.stream()
+				.map(commande -> commandeMapper.toDto(commande))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(commandesDto);
+	}
+	
+	
 	// Créer une commande vide lors du clic sur une table
 	@PostMapping("/creation")
 	public ResponseEntity<CommandeDto> create(@RequestParam("table") Integer idTable ){
@@ -99,7 +113,7 @@ public class CommandeController {
 	}
 		
 	// Mettre à jour le statut de la commande "Prête" à "Servie"
-	@PutMapping("/{id}/prête")
+	@PutMapping("/{id}/servie")
 	public ResponseEntity<CommandeDto> updateStatutServie(@PathVariable("id") Integer id) {
 		Commande commande = commandeService.getById(id);
 		commande.setStatut("Servie");
@@ -123,7 +137,7 @@ public class CommandeController {
 	}
 	
 	// Mettre à jour le statut de la commande "En cuisine" à "Prête"
-	@PutMapping("/{id}/prête")
+	@PutMapping("/{id}/prete")
 	public ResponseEntity<CommandeDto> updateStatutPrete(@PathVariable("id") Integer id) {
 		Commande commande = commandeService.getById(id);
 		commande.setStatut("Prête");
@@ -157,8 +171,11 @@ public class CommandeController {
 		return ResponseEntity.ok(commandeDto);
 	}
 		
-	//Suppression de la commande une fois payée?
-
-	
+	// Supprimer la commande une fois réglée (check du statut a faire en front)
+	@DeleteMapping("/{id}/suppression")
+	public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
+		commandeService.delete(id);
+		return ResponseEntity.ok("La commande et la réservation associée ont bien été supprimées !");
+	}
 	
 }

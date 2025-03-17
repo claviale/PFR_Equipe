@@ -40,6 +40,11 @@ public class ReservationServiceImpl implements ReservationService {
 		// TODO Auto-generated method stub
 		return repo.findByTableId(id);
 	}
+
+	@Override
+	public void delete(Reservation reservation) {
+		repo.delete(reservation);
+	}
 	
 
 
