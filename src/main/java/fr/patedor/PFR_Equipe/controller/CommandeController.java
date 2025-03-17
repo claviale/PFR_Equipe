@@ -44,18 +44,9 @@ public class CommandeController {
 	@Autowired
 	CommandeMapper commandeMapper;
 	
-	@GetMapping
-	public ResponseEntity<List<CommandeDto>> getAll() {
-		List<Commande> commandes = commandeService.getAll();
-		
-		List<CommandeDto> commandesDto = commandes.stream()
-				.map(commande -> commandeMapper.toDto(commande))
-				.collect(Collectors.toList());
-		
-		return ResponseEntity.ok(commandesDto);
-	}
-	
-	@PostMapping
+	// SALLE
+	// Créer une commande vide lors du clic sur une table
+	@PostMapping("/creation")
 	public ResponseEntity<CommandeDto> create(@RequestParam("table") Integer idTable ){
 		Reservation resa = reservationService.getByTableId(idTable);
 		Commande commande = new Commande();
@@ -68,11 +59,12 @@ public class CommandeController {
 		return ResponseEntity.ok(commandeDto);
 	}
 	
+	// Modifier une commande lors de sa création (ajout de plats)
 	@PutMapping("/{id}")
 	public ResponseEntity<CommandeDto> update(@PathVariable("id") Integer id, @RequestBody CommandeDto commandeDto) {
 	   
 	    Commande commande = commandeService.getById(id);
-	    commande.setStatut(commandeDto.getStatut());
+	    commande.setStatut("En cuisine");
 	    
 	    List<AssoCommandesPlats> platsAjoutes = commandeDto.getAssoCommandesPlatsDto().stream()
 	        .map(platDto -> {
@@ -97,5 +89,76 @@ public class CommandeController {
 	    CommandeDto commandeDTO = commandeMapper.toDto(commande);
 	    return ResponseEntity.ok(commandeDTO);
 	}
+	
+	// Afficher les détails d'une commande lors du clic sur une table
+	@GetMapping("/{id}")
+	public ResponseEntity<CommandeDto> getCommande(@PathVariable("id") Integer id) {
+		Commande commande = commandeService.getById(id);
+		CommandeDto commandeDto = commandeMapper.toDto(commande);
+		return ResponseEntity.ok(commandeDto);
+	}
+		
+	// Mettre à jour le statut de la commande "Prête" à "Servie"
+	@PutMapping("/{id}/prête")
+	public ResponseEntity<CommandeDto> updateStatutServie(@PathVariable("id") Integer id) {
+		Commande commande = commandeService.getById(id);
+		commande.setStatut("Servie");
+		commandeService.update(commande);
+
+		CommandeDto commandeDto = commandeMapper.toDto(commande);
+		return ResponseEntity.ok(commandeDto);
+	}
+	
+	// CUISINE
+	// Afficher les commandes avec le statut "En cuisine"
+	@GetMapping("/en-cuisine")
+	public ResponseEntity<List<CommandeDto>> getCommandesEnCuisine() {
+	    List<Commande> commandesEnCuisine = commandeService.getCommandesByStatut("En cuisine");
+	    
+	    List<CommandeDto> commandesDto = commandesEnCuisine.stream()
+	        .map(commande -> commandeMapper.toDto(commande))
+	        .collect(Collectors.toList());
+	    
+	    return ResponseEntity.ok(commandesDto);
+	}
+	
+	// Mettre à jour le statut de la commande "En cuisine" à "Prête"
+	@PutMapping("/{id}/prête")
+	public ResponseEntity<CommandeDto> updateStatutPrete(@PathVariable("id") Integer id) {
+		Commande commande = commandeService.getById(id);
+		commande.setStatut("Prête");
+		commandeService.update(commande);
+	        
+		CommandeDto commandeDto = commandeMapper.toDto(commande);
+		return ResponseEntity.ok(commandeDto);
+	}
+	
+	// CAISSE
+	// Afficher les commandes avec le statut "Servie"
+	@GetMapping("/servie")
+	public ResponseEntity<List<CommandeDto>> getCommandesServies() {
+		List<Commande> commandesEnCuisine = commandeService.getCommandesByStatut("Servie");
+		    
+		List<CommandeDto> commandesDto = commandesEnCuisine.stream()
+			.map(commande -> commandeMapper.toDto(commande))
+			.collect(Collectors.toList());
+		    
+		return ResponseEntity.ok(commandesDto);
+	}
+		
+	// Mettre à jour le statut de la commande "Servie" à "Payée"
+	@PutMapping("/{id}/payee")
+	public ResponseEntity<CommandeDto> updateStatutPayee(@PathVariable("id") Integer id) {
+		Commande commande = commandeService.getById(id);
+		commande.setStatut("Payée");
+		commandeService.update(commande);
+		        
+		CommandeDto commandeDto = commandeMapper.toDto(commande);
+		return ResponseEntity.ok(commandeDto);
+	}
+		
+	//Suppression de la commande une fois payée?
+
+	
 	
 }
