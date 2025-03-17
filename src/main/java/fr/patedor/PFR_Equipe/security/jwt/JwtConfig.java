@@ -10,6 +10,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Configuration
@@ -19,11 +21,12 @@ public class JwtConfig {
      * Authentification de l'utilisateur depuis la base de données
      */
     @Autowired
-    private UtilisateurRepository uRepository;
+    private UtilisateurRepository userRepository;
+
 
     @Bean
     UserDetailsService userDetailsService() {
-        return login -> uRepository.findByLogin(login)
+        return login -> userRepository.findByLogin(login)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
@@ -31,12 +34,13 @@ public class JwtConfig {
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
-
+   
 }

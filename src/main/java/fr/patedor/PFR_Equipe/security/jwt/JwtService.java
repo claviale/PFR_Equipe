@@ -22,12 +22,14 @@ public class JwtService {
     @Value("${app.jwt.secret}")
     private String SECRET_KEY;
 
+
     // Signature transmise pour la création du jeton.
     // Et chiffrer/déchiffrer les données du jeton
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
 
     // Extraire « claims » du jeton
     private Claims extractAllClaims(String token) {
@@ -57,7 +59,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -65,6 +67,7 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
+
 
     // Validation du jeton
     public boolean isTokenValid(String token, UserDetails userDetails) {
