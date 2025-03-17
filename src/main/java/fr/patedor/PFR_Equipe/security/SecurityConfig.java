@@ -45,8 +45,9 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/tables/**").hasAuthority("EMP")
                     .requestMatchers(HttpMethod.GET, "/reservations/**").hasAuthority("EMP")
                     .requestMatchers(HttpMethod.GET, "/commandes/**").hasAuthority("EMP")
+                    .requestMatchers(HttpMethod.GET, "/plats/**").hasAuthority("EMP")
 
-                    .requestMatchers(HttpMethod.POST, "/commandes").hasAuthority("EMP")
+                    .requestMatchers(HttpMethod.POST, "/commandes/**").hasAuthority("EMP")
                     .requestMatchers(HttpMethod.POST, "/reservations").hasAuthority("EMP")
 
                     .requestMatchers(HttpMethod.PUT, "/tables/**").hasAuthority("EMP")

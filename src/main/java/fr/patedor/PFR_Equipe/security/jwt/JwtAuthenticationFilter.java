@@ -34,11 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Check si on a un header qui commence par "Bearer " car le token suit
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwtToken = authHeader.substring(7); // On récupère juste le token
-            try {
-                username = jwtService.extractUserName(jwtToken);
-            } catch (Exception e) {
-                // Token invalide ou expiré
-            }
+            username = jwtService.extractUserName(jwtToken);
         }
 
         // Si on a un utilisateur, mais pas encore de token
