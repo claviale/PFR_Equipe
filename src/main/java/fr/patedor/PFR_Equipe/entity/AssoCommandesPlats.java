@@ -1,9 +1,8 @@
 package fr.patedor.PFR_Equipe.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,17 +20,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "asso_commandes_plats")
 public class AssoCommandesPlats {
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@JsonBackReference
 	@ManyToOne
-    @JoinColumn(name = "id_commande")
-    private Commande commande;
+	@JoinColumn(name = "id_commande")
+	private Commande commande;
 
     @ManyToOne
     @JoinColumn(name = "id_plat")
     private Plat plat;
 
-    private Integer quantite; 
+    private Integer quantite;
+    
+    public void setPrix(Float prix) {	
+	}
 }

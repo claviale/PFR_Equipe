@@ -24,6 +24,7 @@ public class TableRestaurant {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer idTableRestaurant;
+
 	
 	@Column(name = "nb_places")
 	private Integer nbPlaces;

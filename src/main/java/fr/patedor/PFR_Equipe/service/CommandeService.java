@@ -10,5 +10,5 @@ public interface CommandeService {
 	public void update(Commande commande);
 	public void delete(Commande commande);
 	public List<Commande> getAll();
-	public Optional<Commande> getById(Integer id);
+	public Commande getById(Integer id);
 }

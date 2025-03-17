@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.patedor.PFR_Equipe.dto.CommandeDto;
 import fr.patedor.PFR_Equipe.entity.Commande;
 import fr.patedor.PFR_Equipe.repository.CommandeRepository;
 import jakarta.transaction.Transactional;
@@ -18,14 +19,12 @@ public class CommandeServiceImpl implements CommandeService {
 	
 	@Override
 	public void create(Commande commande) {
-		// TODO Auto-generated method stub
-		
+		repo.save(commande);
 	}
 
 	@Override
 	public void update(Commande commande) {
-		// TODO Auto-generated method stub
-		
+		repo.save(commande);
 	}
 
 	@Override
@@ -35,16 +34,14 @@ public class CommandeServiceImpl implements CommandeService {
 	}
 
 	@Override
-	@Transactional
 	public List<Commande> getAll() {
 		return repo.findAll();
 	}
 
 	@Override
-	public Optional<Commande> getById(Integer id) {
-		return repo.findById(id);
+	public Commande getById(Integer id) {
+		return repo.findById(id).orElse(null);
 	}
-
 	
 	
 }
