@@ -4,10 +4,8 @@ import fr.patedor.PFR_Equipe.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,13 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class JwtConfig {
 
-    /**
-     * Authentification de l'utilisateur depuis la base de données
-     */
     @Autowired
     private UtilisateurRepository userRepository;
 
-
+    //Instancie un userDetailsService, qui est juste un DAO qui a accès uniquement à findByLogin
     @Bean
     UserDetailsService userDetailsService() {
         return login -> userRepository.findByLogin(login)
@@ -38,9 +33,10 @@ public class JwtConfig {
         return authProvider;
     }
 
+    //Encodeur de password avec BCrypt, car c'est le standard avec Spring Security
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-   
+
 }

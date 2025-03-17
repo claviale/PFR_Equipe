@@ -1,13 +1,11 @@
 package fr.patedor.PFR_Equipe.security.jwt;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//Is this our AuthenticationProvider?
 @RestController
 @RequestMapping("/login")
 public class AuthenticationController {
@@ -20,7 +18,7 @@ public class AuthenticationController {
 
 
     @PostMapping
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 }

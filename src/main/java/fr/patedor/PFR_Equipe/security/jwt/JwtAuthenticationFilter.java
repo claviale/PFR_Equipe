@@ -14,8 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
-//Doit être active dès qu'il y a une requête
-//Doit devenir un bean pour spring
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -24,13 +22,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-    /*
-    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
-        this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
-    }
-    */
     
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
@@ -40,21 +31,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = null;
         String jwtToken = null;
 
-        // Check if the header exists and starts with "Bearer "
+        // Check si on a un header qui commence par "Bearer " car le token suit
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwtToken = authHeader.substring(7); // Remove "Bearer " prefix
+            jwtToken = authHeader.substring(7); // On récupère juste le token
             try {
                 username = jwtService.extractUserName(jwtToken);
             } catch (Exception e) {
-                // Invalid or expired token; proceed without setting authentication
+                // Token invalide ou expiré
             }
         }
 
-        // If username is extracted and no authentication is set yet
+        // Si on a un utilisateur, mais pas encore de token
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            // Validate the token
+            // On vérifie si le token est valide avant d'authentifier
             if (jwtService.isTokenValid(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

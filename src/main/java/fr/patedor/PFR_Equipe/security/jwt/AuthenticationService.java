@@ -2,7 +2,6 @@ package fr.patedor.PFR_Equipe.security.jwt;
 
 import fr.patedor.PFR_Equipe.entity.Utilisateur;
 import fr.patedor.PFR_Equipe.repository.UtilisateurRepository;
-import fr.patedor.PFR_Equipe.security.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,13 +22,13 @@ public class AuthenticationService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getLogin(), request.getMdp()));
 
+        //Génère le token
         Utilisateur utilisateur = utilisateurRepository.findByLogin(request.getLogin()).orElseThrow();
-
         String jwtToken = jwtService.generateToken(utilisateur);
         AuthenticationResponse authResponse = new AuthenticationResponse();
         authResponse.setToken(jwtToken);
 
-        //set the authenticated user's information in the security context
+        //Ajoute l'utilisateur connecté au contexte de sécurité
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return authResponse;

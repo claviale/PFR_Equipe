@@ -1,11 +1,12 @@
 package fr.patedor.PFR_Equipe.security.jwt;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class AuthenticationResponse {
     private String token;
 }
