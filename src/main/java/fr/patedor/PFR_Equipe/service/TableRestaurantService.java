@@ -17,4 +17,6 @@ public interface TableRestaurantService {
 	List<TableRestaurant> getTablesLibres(Integer idRestaurant, LocalDateTime heureResa);
 	
 	boolean estLibre(TableRestaurant table, List<Reservation> reservations, LocalDateTime heureResa);
+
+	TableRestaurant getById(Integer id);
 }

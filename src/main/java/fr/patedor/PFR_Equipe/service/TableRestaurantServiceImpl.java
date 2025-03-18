@@ -21,7 +21,12 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 	
 	@Autowired
 	ReservationRepository reservationRepository;
-	
+
+	@Override
+	public TableRestaurant getById(Integer id) {
+		return repo.findById(id).orElseThrow();
+	}
+
 	@Override
 	public List<TableRestaurant> getAllByRestaurantId(Integer idRestaurant) {
 		// TODO Auto-generated method stub
@@ -61,8 +66,5 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 
         return true;
 	}
-
-	
-	
 
 }
