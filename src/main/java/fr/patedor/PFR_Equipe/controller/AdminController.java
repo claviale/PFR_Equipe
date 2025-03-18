@@ -34,6 +34,12 @@ public class AdminController {
     @Autowired
     UtilisateurMapper utilisateurMapper;
 
+    //A décommenter lorsque l'on aura merge Security
+    /*
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    */
+
     @GetMapping
     public ResponseEntity<List<RestaurantDTO>> getAll() {
         List<RestaurantDTO> restaurants = restaurantService.findAll().stream()
@@ -51,7 +57,7 @@ public class AdminController {
     }
 
     @PostMapping("/{id_restaurant}")
-    public void addEmploye(@RequestBody UtilisateurDTO utilisateur, @PathVariable("id_restaurant") Integer idRestaurant) {
+    public ResponseEntity<UtilisateurDTO> addEmploye(@RequestBody UtilisateurDTO utilisateur, @PathVariable("id_restaurant") Integer idRestaurant) {
         Optional<Restaurant> restaurant = restaurantService.findById(idRestaurant);
         Utilisateur aAjouter = Utilisateur.builder()
                 .nom(utilisateur.getNom())
@@ -59,11 +65,24 @@ public class AdminController {
                 .login(utilisateur.getLogin())
                 .email(utilisateur.getEmail())
                 .telephone(utilisateur.getTelephone())
-                .mdp("password")
+                .mdp(utilisateur.getLogin().toLowerCase()) //TODO A remplacer par passwordEncoder.encode(utilisateur.getLogin().toLowerCase()) une fois la sécurité merged
                 .role(new Role("EMP", "Employé"))
                 .build();
         restaurant.ifPresent(aAjouter::setRestaurant);
         utilisateurService.addUtilisateur(aAjouter);
+        return ResponseEntity.ok(utilisateurMapper.toDTO(aAjouter));
+    }
+
+
+    @PutMapping("/{id_restaurant}/{id_employe}")
+    public ResponseEntity<UtilisateurDTO> updateEmploye(@PathVariable("id_restaurant") Integer idRestaurant, @PathVariable("id_employe") Integer idEmploye, @RequestBody UtilisateurDTO employe){
+        Optional<Restaurant> restaurant = restaurantService.findById(idRestaurant);
+        Utilisateur aModifier = utilisateurMapper.toEntity(employe);
+        aModifier.setId(idEmploye);
+        aModifier.setRole(new Role("EMP", "Employé"));
+        restaurant.ifPresent(aModifier::setRestaurant);
+        utilisateurService.addUtilisateur(aModifier);
+        return ResponseEntity.ok(utilisateurMapper.toDTO(aModifier));
     }
 
 
