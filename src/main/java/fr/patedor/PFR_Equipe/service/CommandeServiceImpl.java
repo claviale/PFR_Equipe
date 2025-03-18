@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import fr.patedor.PFR_Equipe.dto.CommandeDto;
 import fr.patedor.PFR_Equipe.entity.Commande;
+import fr.patedor.PFR_Equipe.entity.Reservation;
 import fr.patedor.PFR_Equipe.repository.CommandeRepository;
 import jakarta.transaction.Transactional;
 
@@ -15,37 +16,39 @@ import jakarta.transaction.Transactional;
 public class CommandeServiceImpl implements CommandeService {
 	
 	@Autowired
-	CommandeRepository repo;
+	CommandeRepository commandeRepo;
+	
+	@Autowired
+	ReservationService resaService;
 	
 	@Override
 	public void create(Commande commande) {
-		repo.save(commande);
+		commandeRepo.save(commande);
 	}
 
 	@Override
 	public void update(Commande commande) {
-		repo.save(commande);
-	}
-
-	@Override
-	public void delete(Commande commande) {
-		// TODO Auto-generated method stub
-		
+		commandeRepo.save(commande);
 	}
 
 	@Override
 	public List<Commande> getAll() {
-		return repo.findAll();
+		return commandeRepo.findAll();
 	}
 
 	@Override
 	public Commande getById(Integer id) {
-		return repo.findById(id).orElse(null);
+		return commandeRepo.findById(id).orElse(null);
 	}
 
 	@Override
 	public List<Commande> getCommandesByStatut(String statut) {
-		return repo.findByStatut(statut);
+		return commandeRepo.findByStatut(statut);
+	}
+
+	@Override
+	public void delete(Integer id) {
+		commandeRepo.deleteById(id);
 	}
 	
 	
