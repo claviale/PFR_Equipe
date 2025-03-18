@@ -11,4 +11,5 @@ public interface ReservationService {
     public List<Reservation> getAllReservationsForRestaurant(Integer idRestaurant);
 	public Reservation getById(Integer idReservation);
 	public Reservation getByTableId(Integer id);
+	public void delete(Reservation reservation);
 }
