@@ -1,9 +1,12 @@
 package fr.patedor.PFR_Equipe.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +22,17 @@ public class TableRestaurant {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	@Column(name = "id")
+	private Integer idTableRestaurant;
+
 	
-	private Integer nb_places;
-	private Integer numero_table;
+	@Column(name = "nb_places")
+	private Integer nbPlaces;
+	@Column(name = "numero_table")
+	private Integer numeroTable;
 	
+    @ManyToOne
+    @JoinColumn(name = "id_restaurant")
+    private Restaurant restaurant;
 }
+

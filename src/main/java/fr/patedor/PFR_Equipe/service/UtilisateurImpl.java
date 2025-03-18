@@ -36,4 +36,9 @@ public class UtilisateurImpl implements UtilisateurService{
     public Utilisateur selectByPrenom(String prenom) {
         return utilisateurRepository.findByPrenom("Etienne");
     }
+    
+    @Override
+    public Utilisateur selectByNom(String nom) {
+        return utilisateurRepository.findByNom(nom);
+    }
 }

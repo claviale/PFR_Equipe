@@ -11,6 +11,8 @@ public interface UtilisateurService {
     void delete(Integer idEmploye);
 
     Utilisateur selectByPrenom(String prenom);
+    
+    Utilisateur selectByNom(String nom);
 
     void addUtilisateur(Utilisateur aAjouter);
 }
