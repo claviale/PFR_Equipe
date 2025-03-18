@@ -1,14 +1,11 @@
 package fr.patedor.PFR_Equipe.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.patedor.PFR_Equipe.entity.Reservation;
-import fr.patedor.PFR_Equipe.entity.Restaurant;
-import fr.patedor.PFR_Equipe.entity.TableRestaurant;
 import fr.patedor.PFR_Equipe.repository.ReservationRepository;
 
 @Service

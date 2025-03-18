@@ -39,6 +39,17 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 	}
 
 	@Override
+	public List<TableRestaurant> getTablesLibres(Integer idRestaurant, LocalDateTime heureResa, Integer nbPersonne) {
+        List<TableRestaurant> tables = repo.findByNbPlacesAndIdRestaurant(idRestaurant, nbPersonne);
+
+		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant);
+
+        return tables.stream()
+                .filter(table -> estLibre(table, reservations, heureResa))
+                .collect(Collectors.toList());
+	}
+
+	@Override
 	public List<TableRestaurant> getTablesLibres(Integer idRestaurant, LocalDateTime heureResa) {
         List<TableRestaurant> tables = repo.findAllByRestaurantId(idRestaurant);
         
@@ -46,6 +57,28 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 
         return tables.stream()
                 .filter(table -> estLibre(table, reservations, heureResa))
+                .collect(Collectors.toList());
+	}
+
+	@Override
+	public List<TableRestaurant> getTablesLibresMaintenant(Integer idRestaurant, Integer nbPersonne) {
+        List<TableRestaurant> tables = repo.findByNbPlacesAndIdRestaurant(idRestaurant, nbPersonne);
+
+		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant);
+
+        return tables.stream()
+                .filter(table -> estLibre(table, reservations, LocalDateTime.now()))
+                .collect(Collectors.toList());
+	}
+
+	@Override
+	public List<TableRestaurant> getTablesOccupees(Integer idRestaurant) {
+        List<TableRestaurant> tables = repo.findAllByRestaurantId(idRestaurant);
+
+		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant);
+
+        return tables.stream()
+                .filter(table -> !estLibre(table, reservations, LocalDateTime.now()))
                 .collect(Collectors.toList());
 	}
 
