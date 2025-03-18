@@ -27,15 +27,38 @@ public class TableRestaurantController {
     @Autowired
     TableRestaurantMapper tableMapper;
 
-    @GetMapping("/{idRestaurant}/libres")
+    @GetMapping("/libres/{idRestaurant}")
     public List<TableRestaurantDTO> getTablesLibres(
             @PathVariable Integer idRestaurant,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime heureResa) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime heureResa,
+            @RequestParam Integer nbPersonne) {
     	
-        List<TableRestaurant> tablesLibres = tableService.getTablesLibres(idRestaurant, heureResa);
+        List<TableRestaurant> tablesLibres = tableService.getTablesLibres(idRestaurant, heureResa, nbPersonne);
 
         // Convertir les entités en DTOs
         return tablesLibres.stream()
+                .map(table -> tableMapper.toDTO(table))  
+                .collect(Collectors.toList());
+    }
+    
+    @GetMapping("/{idRestaurant}")
+    public List<TableRestaurantDTO> getTablesLibresMaintenant(@PathVariable Integer idRestaurant, @RequestParam Integer nbPersonne) {
+    	
+        List<TableRestaurant> tablesLibres = tableService.getTablesLibresMaintenant(idRestaurant, nbPersonne);
+
+        // Convertir les entités en DTOs
+        return tablesLibres.stream()
+                .map(table -> tableMapper.toDTO(table))  
+                .collect(Collectors.toList());
+    }
+    
+    @GetMapping("/occupees/{idRestaurant}")
+    public List<TableRestaurantDTO> getTablesOccupees(@PathVariable Integer idRestaurant) {
+    	
+        List<TableRestaurant> tablesOccupees = tableService.getTablesOccupees(idRestaurant);
+
+        // Convertir les entités en DTOs
+        return tablesOccupees.stream()
                 .map(table -> tableMapper.toDTO(table))  
                 .collect(Collectors.toList());
     }
