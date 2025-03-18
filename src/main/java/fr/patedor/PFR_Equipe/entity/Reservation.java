@@ -31,7 +31,7 @@ public class Reservation {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_utilisateur")
-	private Utilisateur utilisateur;
+	private Utilisateur client;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_table", nullable = true)
@@ -43,4 +43,5 @@ public class Reservation {
 	@Column(name = "nombre_personnes")
 	private Integer nbPersonne;
 	private String statut;
+
 }

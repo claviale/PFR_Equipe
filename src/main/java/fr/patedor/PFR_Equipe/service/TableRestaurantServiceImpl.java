@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.patedor.PFR_Equipe.entity.Reservation;
+import fr.patedor.PFR_Equipe.entity.Restaurant;
 import fr.patedor.PFR_Equipe.entity.TableRestaurant;
 import fr.patedor.PFR_Equipe.repository.ReservationRepository;
 import fr.patedor.PFR_Equipe.repository.TableRestaurantRepository;
@@ -20,9 +21,15 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 	
 	@Autowired
 	ReservationRepository reservationRepository;
-	
+
+	@Override
+	public TableRestaurant getById(Integer id) {
+		return repo.findById(id).orElseThrow();
+	}
+
 	@Override
 	public List<TableRestaurant> getAllByRestaurantId(Integer idRestaurant) {
+		// TODO Auto-generated method stub
 		return repo.findAllByRestaurantId(idRestaurant);
 	}
 
@@ -34,14 +41,14 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 	@Override
 	public List<TableRestaurant> getTablesLibres(Integer idRestaurant, LocalDateTime heureResa, Integer nbPersonne) {
         List<TableRestaurant> tables = repo.findByNbPlacesAndIdRestaurant(idRestaurant, nbPersonne);
-        
+
 		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant);
 
         return tables.stream()
                 .filter(table -> estLibre(table, reservations, heureResa))
                 .collect(Collectors.toList());
 	}
-	
+
 	@Override
 	public List<TableRestaurant> getTablesLibres(Integer idRestaurant, LocalDateTime heureResa) {
         List<TableRestaurant> tables = repo.findAllByRestaurantId(idRestaurant);
@@ -52,11 +59,11 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
                 .filter(table -> estLibre(table, reservations, heureResa))
                 .collect(Collectors.toList());
 	}
-	
+
 	@Override
 	public List<TableRestaurant> getTablesLibresMaintenant(Integer idRestaurant, Integer nbPersonne) {
         List<TableRestaurant> tables = repo.findByNbPlacesAndIdRestaurant(idRestaurant, nbPersonne);
-        
+
 		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant);
 
         return tables.stream()
@@ -67,14 +74,14 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 	@Override
 	public List<TableRestaurant> getTablesOccupees(Integer idRestaurant) {
         List<TableRestaurant> tables = repo.findAllByRestaurantId(idRestaurant);
-        
+
 		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant);
 
         return tables.stream()
                 .filter(table -> !estLibre(table, reservations, LocalDateTime.now()))
                 .collect(Collectors.toList());
 	}
-	
+
 	public boolean estLibre(TableRestaurant table, List<Reservation> reservations, LocalDateTime heureResa) {
         LocalDateTime finResa = heureResa.plusHours(2).plusMinutes(30);
 
@@ -92,4 +99,5 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 
         return true;
 	}
+
 }

@@ -9,10 +9,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UtilisateurDTO {
+public class EmployeDTO {
+
     private Integer id;
     private String nom;
     private String prenom;
     private String email;
     private String telephone;
+    private String login;
+    private String mdp;
+
 }

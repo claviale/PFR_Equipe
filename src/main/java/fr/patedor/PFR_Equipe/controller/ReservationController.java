@@ -4,42 +4,33 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import fr.patedor.PFR_Equipe.dto.TableRestaurantDTO;
+import fr.patedor.PFR_Equipe.entity.*;
+import fr.patedor.PFR_Equipe.mapper.TableRestaurantMapper;
+import fr.patedor.PFR_Equipe.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import fr.patedor.PFR_Equipe.dto.ReservationDTO;
-import fr.patedor.PFR_Equipe.entity.Reservation;
-import fr.patedor.PFR_Equipe.entity.Restaurant;
-import fr.patedor.PFR_Equipe.entity.TableRestaurant;
-import fr.patedor.PFR_Equipe.entity.Utilisateur;
 import fr.patedor.PFR_Equipe.mapper.ReservationMapper;
 import fr.patedor.PFR_Equipe.mapper.RestaurantMapper;
-import fr.patedor.PFR_Equipe.service.ReservationService;
-import fr.patedor.PFR_Equipe.service.RestaurantService;
-import fr.patedor.PFR_Equipe.service.TableRestaurantService;
-import fr.patedor.PFR_Equipe.service.UtilisateurService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 	
 	@Autowired
-	UtilisateurService utilisateurService;
+    UtilisateurService utilisateurService;
 	
 	@Autowired
 	TableRestaurantService tableRestaurantService;
+
+    @Autowired
+    TableRestaurantMapper tableRestaurantMapper;
 	
     @Autowired
     RestaurantService restaurantService;
-	
-    @Autowired
-    RestaurantMapper restaurantMapper;
     
     @Autowired
     ReservationService reservationService;
@@ -59,11 +50,11 @@ public class ReservationController {
     
     @PostMapping("/{idRestaurant}")
     public void addReservation(@RequestBody ReservationDTO reservation, @PathVariable("idRestaurant") Integer idRestaurant) {
-		Utilisateur utilisateur = utilisateurService.selectByNom(reservation.getNomClient());
+		Utilisateur client = utilisateurService.selectByNom(reservation.getNomClient());
 		TableRestaurant tableRestaurant = tableRestaurantService.selectByNumeroTableAndIdRestaurant(reservation.getNumeroTable(), idRestaurant);
     	Optional<Restaurant> restaurant = restaurantService.findById(idRestaurant);
         Reservation nouvelleResa = Reservation.builder()
-				.utilisateur(utilisateur)
+				.client(client)
 				.table(tableRestaurant)
 				.horaireReservation(reservation.getHoraireReservation())
 				.nbPersonne(reservation.getNbPersonne())
@@ -71,5 +62,34 @@ public class ReservationController {
 				.build();
         restaurant.ifPresent(nouvelleResa::setRestaurant);
         reservationService.create(nouvelleResa);
+    }
+
+    //renvoie la liste des tables libres et avec le bon nombre de places
+    //pour pouvoir en associer une à une réservation "en attente"
+    @GetMapping("/{id_restaurant}/{id_reservation}")
+    public ResponseEntity<List<TableRestaurantDTO>> tablesPourResa(@PathVariable("id_restaurant") Integer idRestau, @PathVariable("id_reservation") Integer idResa){
+        Reservation resaAValider = reservationService.getById(idResa);
+
+        List<TableRestaurantDTO> tables = tableRestaurantService.getTablesLibres(idRestau, resaAValider.getHoraireReservation())
+                .stream()
+                .filter(table -> resaAValider.getNbPersonne() <= table.getNbPlaces() + 1)
+                .map(table -> tableRestaurantMapper.toDTO(table))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(tables);
+    }
+
+    //une fois la table sélectionnée, on l'ajoute à la résa et on passe celle-ci en "Confirmée"
+    @PutMapping("/{id_restaurant}/{id_reservation}")
+    public ResponseEntity<ReservationDTO> accepterReservation(@PathVariable("id_restaurant") Integer idRestau, @PathVariable("id_reservation") Integer idResa, @RequestBody TableRestaurantDTO table) {
+        Reservation reservation = reservationService.getById(idResa);
+        TableRestaurant tableAAjouter = tableRestaurantService.selectByNumeroTableAndIdRestaurant(table.getNumeroTable(), idRestau);
+
+        reservation.setStatut("Confirmée");
+        reservation.setTable(tableAAjouter);
+
+        reservationService.create(reservation);
+
+        return ResponseEntity.ok(reservationMapper.toDTO(reservation));
     }
 }
