@@ -26,21 +26,14 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.findAllByRestaurant(idRestaurant);
     }
 
-	@Override
-	public List<Reservation> getAllByRestaurant(Restaurant restaurant) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
-	public Reservation getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Reservation getById(Integer idReservation) {
+		return reservationRepository.findById(idReservation).orElse(null);
 	}
 
 	@Override
 	public Reservation getByTableId(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return reservationRepository.findByTableId(id);
 	}
 }

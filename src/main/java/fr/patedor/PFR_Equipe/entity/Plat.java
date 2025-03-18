@@ -33,7 +33,6 @@ public class Plat {
 	@JoinColumn(name = "id_categorie")
 	private Categorie categorie;
 	
-	@JsonBackReference
 	@OneToMany(mappedBy = "plat")
 	private List<AssoCommandesPlats> assoCommandesPlats;
 
