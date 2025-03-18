@@ -29,14 +29,5 @@ public class EmployeServiceImpl implements EmployeService {
         Optional<Employe> aSupprimer = employeRepository.findById(idEmploye);
         aSupprimer.ifPresent(utilisateur -> employeRepository.delete(utilisateur));
     }
-
-    @Override
-    public Employe selectByPrenom(String prenom) {
-        return employeRepository.findByPrenom("Etienne");
-    }
     
-    @Override
-    public Employe selectByNom(String nom) {
-        return employeRepository.findByNom(nom);
-    }
 }

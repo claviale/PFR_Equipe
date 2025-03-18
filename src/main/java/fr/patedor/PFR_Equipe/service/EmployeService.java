@@ -10,9 +10,5 @@ public interface EmployeService {
 
     void delete(Integer idEmploye);
 
-    Employe selectByPrenom(String prenom);
-    
-    Employe selectByNom(String nom);
-
     void addUtilisateur(Employe aAjouter);
 }
