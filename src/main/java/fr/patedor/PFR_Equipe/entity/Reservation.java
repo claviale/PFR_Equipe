@@ -43,4 +43,5 @@ public class Reservation {
 	@Column(name = "nombre_personnes")
 	private Integer nbPersonne;
 	private String statut;
+
 }

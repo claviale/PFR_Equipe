@@ -2,12 +2,15 @@ package fr.patedor.PFR_Equipe.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fr.patedor.PFR_Equipe.dto.ReservationDTO;
 import fr.patedor.PFR_Equipe.entity.Reservation;
+import fr.patedor.PFR_Equipe.entity.Restaurant;
 import fr.patedor.PFR_Equipe.mapper.ReservationMapper;
 import fr.patedor.PFR_Equipe.service.ReservationService;
+import fr.patedor.PFR_Equipe.service.RestaurantService;
 import fr.patedor.PFR_Equipe.service.TableRestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,6 +37,9 @@ public class TableRestaurantController {
 
     @Autowired
     ReservationMapper reservationMapper;
+
+    @Autowired
+    RestaurantService restaurantService;
 
     @GetMapping("/libres/{idRestaurant}")
     public List<TableRestaurantDTO> getTablesLibres(
@@ -63,21 +69,24 @@ public class TableRestaurantController {
     //Permet d'accepter une nouvelle résa et l'associer à une table
     //Deux cas possibles :
     //Dans le cas où des gens arrivent sans avoir réservé, le front créé une réservation avec la dateTime.NOW,
-    //avec un utilisateur nommé "sans_resa" et le statut "présent" (plus reste du DTO)
-    //Si la résa est en base, on l'associe juste à la table et on la passe en "présents"
+    //avec un utilisateur nommé "sans_resa" et le statut "Présent" (plus reste du DTO)
+    //Si la résa est en base, on l'associe juste à la table et on la passe en "Présent"
     //Le statut de la table (libre ou occupée) est en fait géré par la requête estLibre de Quentin
     @PutMapping("/{id_table}")
     public ResponseEntity<ReservationDTO> accepterResa(@RequestBody ReservationDTO resaAAccepter){
-        if("sans_resa".equalsIgnoreCase(resaAAccepter.getNomClient())){
-            //cas sans résa, on ajoute juste en base
+
             Reservation resa = reservationMapper.toEntity(resaAAccepter);
+            Optional<Restaurant> restaurant = restaurantService.findById(resaAAccepter.getIdRestaurant());
+            restaurant.ifPresent(resa::setRestaurant);
+            //cas avec résa, il faut passer le statut à "Présent" manuellement
+            if(!"sans_resa".equalsIgnoreCase(resaAAccepter.getNomClient())){
+                resaAAccepter.setStatut("Présent");
+            }
             reservationService.create(resa);
-        }else{
-            //cas avec résa, on passe juste le statut à "présent"
-            resaAAccepter.setStatut("présent");
-            Reservation resa = reservationMapper.toEntity(resaAAccepter);
-            reservationService.create(resa);
-        }
+            //cas sans résa, il faut rajouter l'ID au DTO car la résa n'était pas déjà en base
+            if("sans_resa".equalsIgnoreCase(resaAAccepter.getNomClient())) {
+                resaAAccepter.setId(resa.getIdReservation());
+            }
         return ResponseEntity.ok(resaAAccepter);
     }
 
