@@ -1,12 +1,10 @@
 package fr.patedor.PFR_Equipe.service;
 
-import fr.patedor.PFR_Equipe.dto.UtilisateurDTO;
 import fr.patedor.PFR_Equipe.entity.Utilisateur;
 import fr.patedor.PFR_Equipe.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

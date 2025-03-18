@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import fr.patedor.PFR_Equipe.entity.Commande;
-import fr.patedor.PFR_Equipe.entity.Reservation;
 
 public interface CommandeRepository extends JpaRepository<Commande, Integer> {
 	List<Commande> findByStatut(String statut);
