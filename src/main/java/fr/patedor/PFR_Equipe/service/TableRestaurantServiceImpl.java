@@ -44,7 +44,6 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
                 .collect(Collectors.toList());
 	}
 
-	@Override
 	public boolean estLibre(TableRestaurant table, List<Reservation> reservations, LocalDateTime heureResa) {
         LocalDateTime finResa = heureResa.plusHours(2).plusMinutes(30);
 
