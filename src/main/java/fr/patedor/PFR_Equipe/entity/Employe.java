@@ -11,6 +11,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "employes")
-public class Employe {
+public class Employe  implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,5 +45,20 @@ public class Employe {
     @ManyToOne
     @JoinColumn(name = "id_restaurant")
     private Restaurant restaurant;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.getId()));
+    }
+
+    @Override
+    public String getPassword() {
+        return mdp;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
 }
 

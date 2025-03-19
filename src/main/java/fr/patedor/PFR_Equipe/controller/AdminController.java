@@ -11,6 +11,7 @@ import fr.patedor.PFR_Equipe.service.RestaurantService;
 import fr.patedor.PFR_Equipe.service.EmployeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,11 +34,8 @@ public class AdminController {
     @Autowired
     EmployeMapper employeMapper;
 
-    //A décommenter lorsque l'on aura merge Security
-    /*
     @Autowired
     PasswordEncoder passwordEncoder;
-    */
 
     @GetMapping
     public ResponseEntity<List<RestaurantDTO>> getAll() {

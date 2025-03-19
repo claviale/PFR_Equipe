@@ -25,8 +25,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "employes")
-public class Utilisateur implements UserDetails{
+@Table(name = "utilisateurs")
+public class Utilisateur{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +35,10 @@ public class Utilisateur implements UserDetails{
     private String nom;
     private String prenom;
     private String login;
-    private String email;
     private String telephone;
-    private String mdp;
+    private String email;
+    private byte[] mdp;
+    private byte[] salt;
     private String token;
 
     @ManyToOne
@@ -47,20 +48,5 @@ public class Utilisateur implements UserDetails{
     @ManyToOne
     @JoinColumn(name = "id_restaurant")
     private Restaurant restaurant;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.getId()));
-    }
-
-    @Override
-    public String getPassword() {
-        return mdp;
-    }
-
-    @Override
-    public String getUsername() {
-        return login;
-    }
 
 }
