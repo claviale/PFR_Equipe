@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface EmployeRepository extends JpaRepository<Employe, Integer> {
 
-    @Query("FROM Utilisateur u WHERE u.restaurant.id = :id")
+    @Query("FROM Employe e WHERE e.restaurant.id = :id")
     List<Employe> findFromRestaurant(@Param("id") Integer id);
 
     Employe findByPrenom(String prenom);

@@ -20,7 +20,12 @@ public class EmployeServiceImpl implements EmployeService {
     }
 
     @Override
-    public void addUtilisateur(Employe aAjouter) {
+    public Employe findById(Integer id) {
+        return employeRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public void addEmploye(Employe aAjouter) {
         employeRepository.save(aAjouter);
     }
 

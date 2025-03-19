@@ -49,10 +49,10 @@ public class AdminController {
 
     @GetMapping("/{id_restaurant}")
     public ResponseEntity<List<EmployeDTO>> getEmployes(@PathVariable("id_restaurant") Integer idRestaurant) {
-        List<EmployeDTO> utilisateurs = employeService.findFromRestaurant(idRestaurant).stream()
+        List<EmployeDTO> employes = employeService.findFromRestaurant(idRestaurant).stream()
                 .map(utilisateur -> employeMapper.toDTO(utilisateur))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(utilisateurs);
+        return ResponseEntity.ok(employes);
     }
 
     @PostMapping("/{id_restaurant}")
@@ -68,7 +68,7 @@ public class AdminController {
                 .role(new Role("EMP", "Employé"))
                 .build();
         restaurant.ifPresent(aAjouter::setRestaurant);
-        employeService.addUtilisateur(aAjouter);
+        employeService.addEmploye(aAjouter);
         return ResponseEntity.ok(employeMapper.toDTO(aAjouter));
     }
 
@@ -76,11 +76,16 @@ public class AdminController {
     @PutMapping("/{id_restaurant}/{id_employe}")
     public ResponseEntity<EmployeDTO> updateEmploye(@PathVariable("id_restaurant") Integer idRestaurant, @PathVariable("id_employe") Integer idEmploye, @RequestBody EmployeDTO employe){
         Optional<Restaurant> restaurant = restaurantService.findById(idRestaurant);
-        Employe aModifier = employeMapper.toEntity(employe);
+        Employe aModifier = employeService.findById(idEmploye);
+        aModifier.setNom(employe.getNom());
+        aModifier.setPrenom(employe.getPrenom());
+        aModifier.setEmail(employe.getEmail());
+        aModifier.setTelephone(employe.getTelephone());
+        aModifier.setLogin(employe.getLogin());
         aModifier.setId(idEmploye);
         aModifier.setRole(new Role("EMP", "Employé"));
         restaurant.ifPresent(aModifier::setRestaurant);
-        employeService.addUtilisateur(aModifier);
+        employeService.addEmploye(aModifier);
         return ResponseEntity.ok(employeMapper.toDTO(aModifier));
     }
 
