@@ -1,6 +1,5 @@
 package fr.patedor.PFR_Equipe.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,20 +16,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity @Table(name = "tables_restaurant")
-public class TableRestaurant {
+@Entity
+@Table(name = "employes")
+public class Employe {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer idTableRestaurant;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	
-	@Column(name = "nb_places")
-	private Integer nbPlaces;
-	@Column(name = "numero_table")
-	private Integer numeroTable;
-	
+    private String nom;
+    private String prenom;
+    private String login;
+    private String email;
+    private String telephone;
+    private String mdp;
+    private String token;
+
+    @ManyToOne
+    @JoinColumn(name = "id_role")
+    private Role role;
+
     @ManyToOne
     @JoinColumn(name = "id_restaurant")
     private Restaurant restaurant;

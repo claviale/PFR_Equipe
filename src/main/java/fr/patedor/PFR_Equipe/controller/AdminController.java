@@ -1,19 +1,18 @@
 package fr.patedor.PFR_Equipe.controller;
 
 import fr.patedor.PFR_Equipe.dto.RestaurantDTO;
-import fr.patedor.PFR_Equipe.dto.UtilisateurDTO;
+import fr.patedor.PFR_Equipe.dto.EmployeDTO;
 import fr.patedor.PFR_Equipe.entity.Restaurant;
 import fr.patedor.PFR_Equipe.entity.Role;
-import fr.patedor.PFR_Equipe.entity.Utilisateur;
+import fr.patedor.PFR_Equipe.entity.Employe;
 import fr.patedor.PFR_Equipe.mapper.RestaurantMapper;
-import fr.patedor.PFR_Equipe.mapper.UtilisateurMapper;
+import fr.patedor.PFR_Equipe.mapper.EmployeMapper;
 import fr.patedor.PFR_Equipe.service.RestaurantService;
-import fr.patedor.PFR_Equipe.service.UtilisateurService;
+import fr.patedor.PFR_Equipe.service.EmployeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,10 +28,16 @@ public class AdminController {
     RestaurantMapper restaurantMapper;
 
     @Autowired
-    UtilisateurService utilisateurService;
+    EmployeService employeService;
 
     @Autowired
-    UtilisateurMapper utilisateurMapper;
+    EmployeMapper employeMapper;
+
+    //A décommenter lorsque l'on aura merge Security
+    /*
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    */
 
     @GetMapping
     public ResponseEntity<List<RestaurantDTO>> getAll() {
@@ -43,33 +48,51 @@ public class AdminController {
     }
 
     @GetMapping("/{id_restaurant}")
-    public ResponseEntity<List<UtilisateurDTO>> getEmployes(@PathVariable("id_restaurant") Integer idRestaurant) {
-        List<UtilisateurDTO> utilisateurs = utilisateurService.findFromRestaurant(idRestaurant).stream()
-                .map(utilisateur -> utilisateurMapper.toDTO(utilisateur))
+    public ResponseEntity<List<EmployeDTO>> getEmployes(@PathVariable("id_restaurant") Integer idRestaurant) {
+        List<EmployeDTO> employes = employeService.findFromRestaurant(idRestaurant).stream()
+                .map(utilisateur -> employeMapper.toDTO(utilisateur))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(utilisateurs);
+        return ResponseEntity.ok(employes);
     }
 
     @PostMapping("/{id_restaurant}")
-    public void addEmploye(@RequestBody UtilisateurDTO utilisateur, @PathVariable("id_restaurant") Integer idRestaurant) {
+    public ResponseEntity<EmployeDTO> addEmploye(@RequestBody EmployeDTO utilisateur, @PathVariable("id_restaurant") Integer idRestaurant) {
         Optional<Restaurant> restaurant = restaurantService.findById(idRestaurant);
-        Utilisateur aAjouter = Utilisateur.builder()
+        Employe aAjouter = Employe.builder()
                 .nom(utilisateur.getNom())
                 .prenom(utilisateur.getPrenom())
                 .login(utilisateur.getLogin())
                 .email(utilisateur.getEmail())
                 .telephone(utilisateur.getTelephone())
-                .mdp("password")
+                .mdp(utilisateur.getLogin().toLowerCase()) //TODO A remplacer par passwordEncoder.encode(utilisateur.getLogin().toLowerCase()) une fois la sécurité merged
                 .role(new Role("EMP", "Employé"))
                 .build();
         restaurant.ifPresent(aAjouter::setRestaurant);
-        utilisateurService.addUtilisateur(aAjouter);
+        employeService.addEmploye(aAjouter);
+        return ResponseEntity.ok(employeMapper.toDTO(aAjouter));
+    }
+
+
+    @PutMapping("/{id_restaurant}/{id_employe}")
+    public ResponseEntity<EmployeDTO> updateEmploye(@PathVariable("id_restaurant") Integer idRestaurant, @PathVariable("id_employe") Integer idEmploye, @RequestBody EmployeDTO employe){
+        Optional<Restaurant> restaurant = restaurantService.findById(idRestaurant);
+        Employe aModifier = employeService.findById(idEmploye);
+        aModifier.setNom(employe.getNom());
+        aModifier.setPrenom(employe.getPrenom());
+        aModifier.setEmail(employe.getEmail());
+        aModifier.setTelephone(employe.getTelephone());
+        aModifier.setLogin(employe.getLogin());
+        aModifier.setId(idEmploye);
+        aModifier.setRole(new Role("EMP", "Employé"));
+        restaurant.ifPresent(aModifier::setRestaurant);
+        employeService.addEmploye(aModifier);
+        return ResponseEntity.ok(employeMapper.toDTO(aModifier));
     }
 
 
     @DeleteMapping("/{id_restaurant}/{id_employe}")
     public void deleteEmploye(@PathVariable("id_employe") Integer idEmploye) {
-        utilisateurService.delete(idEmploye);
+        employeService.delete(idEmploye);
     }
 
 

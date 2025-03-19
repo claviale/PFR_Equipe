@@ -18,4 +18,6 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
     Utilisateur findByPrenom(String prenom);
 
     Optional<Utilisateur> findByLogin(String login);
+
+    Utilisateur findByNom(String nom);
 }

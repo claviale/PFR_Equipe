@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 public class Reservation {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private int idReservation;
+	private Integer idReservation;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_restaurant")
@@ -31,7 +31,7 @@ public class Reservation {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_utilisateur")
-	private Utilisateur utilisateur;
+	private Utilisateur client;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_table", nullable = true)
@@ -41,6 +41,7 @@ public class Reservation {
 	private LocalDateTime horaireReservation;
 	
 	@Column(name = "nombre_personnes")
-	private int nbPersonne;
+	private Integer nbPersonne;
 	private String statut;
+
 }

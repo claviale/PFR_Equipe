@@ -25,6 +25,6 @@ public class Horaire {
 	private String jour;
 	private LocalTime ouverture;
 	private LocalTime fermeture;
-	
+
 }
 
