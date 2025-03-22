@@ -48,10 +48,14 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/plats/**").hasAuthority("EMP")
 
                     .requestMatchers(HttpMethod.POST, "/commandes/**").hasAuthority("EMP")
-                    .requestMatchers(HttpMethod.POST, "/reservations").hasAuthority("EMP")
+                    .requestMatchers(HttpMethod.POST, "/commandes").hasAuthority("EMP")
+                    .requestMatchers(HttpMethod.POST, "/reservations/**").hasAuthority("EMP")
 
                     .requestMatchers(HttpMethod.PUT, "/tables/**").hasAuthority("EMP")
                     .requestMatchers(HttpMethod.PUT, "/commandes/**").hasAuthority("EMP")
+                    .requestMatchers(HttpMethod.PUT, "/reservations/**").hasAuthority("EMP")
+
+                    .requestMatchers(HttpMethod.DELETE, "/commandes/**").hasAuthority("EMP")
 
                     // Toutes autres url et méthodes HTTP ne sont pas permises
                     .anyRequest().denyAll();
