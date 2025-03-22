@@ -62,7 +62,7 @@ public class AdminController {
                 .login(utilisateur.getLogin())
                 .email(utilisateur.getEmail())
                 .telephone(utilisateur.getTelephone())
-                .mdp(utilisateur.getLogin().toLowerCase()) //TODO A remplacer par passwordEncoder.encode(utilisateur.getLogin().toLowerCase()) une fois la sécurité merged
+                .mdp(passwordEncoder.encode(utilisateur.getLogin().toLowerCase()))
                 .role(new Role("EMP", "Employé"))
                 .build();
         restaurant.ifPresent(aAjouter::setRestaurant);
