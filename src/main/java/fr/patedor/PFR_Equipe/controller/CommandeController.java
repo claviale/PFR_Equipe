@@ -46,8 +46,7 @@ public class CommandeController {
 	CommandeMapper commandeMapper;
 	
 	// SALLE
-	
-	// Afficher toutes les commandes
+	// Afficher toutes les commandes (pour tests postman)
 	@GetMapping
 	public ResponseEntity<List<CommandeDto>> getAll() {
 		List<Commande> commandes = commandeService.getAll();
@@ -62,7 +61,7 @@ public class CommandeController {
 	// Créer une commande vide lors du clic sur une table
 	@PostMapping("/creation")
 	public ResponseEntity<CommandeDto> create(@RequestParam("table") Integer idTable ){
-		Reservation resa = reservationService.getByTableId(idTable);
+		Reservation resa = reservationService.getByTableIdAndStatutPresent(idTable);
 		Commande commande = new Commande();
 		commande.setStatut("En cours");
 		commande.setReservation(resa);
