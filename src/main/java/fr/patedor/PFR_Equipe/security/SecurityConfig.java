@@ -1,5 +1,7 @@
 package fr.patedor.PFR_Equipe.security;
 
+import fr.patedor.PFR_Equipe.repository.EmployeRepository;
+import fr.patedor.PFR_Equipe.service.UtilisateurService;
 import jakarta.servlet.Filter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,10 +11,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,10 +28,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private Filter jwtAuthenticationFilter;
+    UserDetailsService userDetailsService;
 
     @Autowired
-    private AuthenticationProvider authenticationProvider;
+    private Filter jwtAuthenticationFilter;
 
     /**
      * Restriction des URLs selon la connexion utilisateur et leurs rôles
@@ -70,7 +75,7 @@ public class SecurityConfig {
 
 
         //Connexion de l'utilisateur
-        http.authenticationProvider(authenticationProvider);
+        http.authenticationProvider(authenticationProvider());
 
         //Activer le filtre JWT et l'authentication de l'utilisateur
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -84,11 +89,23 @@ public class SecurityConfig {
         return http.build();
     }
 
-
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    //Encodeur de password avec BCrypt, car c'est le standard avec Spring Security
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

@@ -2,7 +2,9 @@ package fr.patedor.PFR_Equipe.security.jwt;
 
 import java.io.IOException;
 
+import fr.patedor.PFR_Equipe.repository.EmployeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private EmployeRepository employeRepository;
     
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
@@ -39,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Si on a un utilisateur, mais pas encore de token
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsService().loadUserByUsername(username);
 
             // On vérifie si le token est valide avant d'authentifier
             if (jwtService.isTokenValid(jwtToken, userDetails)) {
@@ -58,6 +60,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     }
 
+
+    //Instancie un userDetailsService, qui est juste un DAO qui a accès uniquement à findByLogin
+    @Bean
+    UserDetailsService userDetailsService() {
+        return login -> employeRepository.findByLogin(login)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 
 
 }
