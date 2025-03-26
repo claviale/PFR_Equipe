@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             username = jwtService.extractUserName(jwtToken);
         }
 
-        // Si on a un utilisateur, mais pas encore de token
+        // Si on a un utilisateur, mais qu'il n'est pas encore connecté
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService().loadUserByUsername(username);
 
