@@ -23,25 +23,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private EmployeRepository employeRepository;
-    
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+    EmployeRepository employeRepository;
+
+    //nom de méthode héritée de OncePerRequestFilter
+    public void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
-        String username = null;
+        String login = null;
         String jwtToken = null;
 
         // Check si on a un header qui commence par "Bearer " car le token suit
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwtToken = authHeader.substring(7); // On récupère juste le token
-            username = jwtService.extractUserName(jwtToken);
+            login = jwtService.extractUserName(jwtToken);
         }
 
         // Si on a un utilisateur, mais qu'il n'est pas encore connecté
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService().loadUserByUsername(username);
+        if (login != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = employeRepository.findByLogin(login).orElseThrow();
 
             // On vérifie si le token est valide avant d'authentifier
             if (jwtService.isTokenValid(jwtToken, userDetails)) {
@@ -52,21 +53,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-
-
-        // Continue the filter chain
+        // Puis on continue dans la chaine de nos filtres
         filterChain.doFilter(request, response);
 
-
     }
 
-
-    //Instancie un userDetailsService, qui est juste un DAO qui a accès uniquement à findByLogin
-    @Bean
-    UserDetailsService userDetailsService() {
-        return login -> employeRepository.findByLogin(login)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
 
 
 }

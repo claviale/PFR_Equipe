@@ -1,6 +1,7 @@
 package fr.patedor.PFR_Equipe.security;
 
 import fr.patedor.PFR_Equipe.repository.EmployeRepository;
+import fr.patedor.PFR_Equipe.security.jwt.JwtAuthenticationFilter;
 import fr.patedor.PFR_Equipe.service.UtilisateurService;
 import jakarta.servlet.Filter;
 import org.apache.commons.logging.Log;
@@ -16,6 +17,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,10 +31,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    UserDetailsService userDetailsService;
+    private EmployeRepository employeRepository;
 
     @Autowired
     private Filter jwtAuthenticationFilter;
+
 
     /**
      * Restriction des URLs selon la connexion utilisateur et leurs rôles
@@ -75,7 +79,7 @@ public class SecurityConfig {
 
 
         //Connexion de l'utilisateur
-        http.authenticationProvider(authenticationProvider());
+        http.authenticationManager(authenticationManager());
 
         //Activer le filtre JWT et l'authentication de l'utilisateur
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -89,17 +93,33 @@ public class SecurityConfig {
         return http.build();
     }
 
+    //Instancie un AuthenticationManager
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager() throws Exception {
+        return new AuthenticationManager() {
+            @Override
+            public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+                return  authenticationProvider().authenticate(authentication);
+            }
+        };
     }
 
+    //Instancie un AuthenticationProvider pour notre AuthenticationManager
     @Bean
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
+    }
+
+    //Instancie un userDetailsService, qui est juste un DAO qui a accès uniquement à findByLogin
+    //Il sert à récupérer en base l'utilisateur que l'on compare avec les Credentials qui sont dans les objets d'Authentication
+    //Que l'on passe en paramètre de la méthode authenticate que l'on donne à nos classes d'authentification
+    @Bean
+    UserDetailsService userDetailsService() {
+        return login -> employeRepository.findByLogin(login)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     //Encodeur de password avec BCrypt, car c'est le standard avec Spring Security

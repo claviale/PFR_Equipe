@@ -1,8 +1,6 @@
 package fr.patedor.PFR_Equipe.security.jwt;
 
 import fr.patedor.PFR_Equipe.entity.Employe;
-import fr.patedor.PFR_Equipe.entity.Utilisateur;
-import fr.patedor.PFR_Equipe.repository.EmployeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,19 +10,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationService {
-    @Autowired
-    private EmployeRepository employeRepository;
+
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtService jwtService;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+
+        //Si l'authenticationManager authentifie un employé en base, on récupère ce dernier dans l'objet Authentication
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getLogin(), request.getMdp()));
+        Employe employe = (Employe) authentication.getPrincipal();
 
         //Génère le token
-        Employe employe = employeRepository.findByLogin(request.getLogin()).orElseThrow();
         String jwtToken = jwtService.generateToken(employe);
         AuthenticationResponse authResponse = new AuthenticationResponse();
         authResponse.setToken(jwtToken);
