@@ -77,7 +77,6 @@ public class SecurityConfig {
             csrf.disable();
         });
 
-
         //Connexion de l'utilisateur
         http.authenticationManager(authenticationManager());
 
@@ -89,13 +88,12 @@ public class SecurityConfig {
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         });
 
-
         return http.build();
     }
 
-    //Instancie un AuthenticationManager
+    //Instancie un AuthenticationManager dont on précise comment implémenter la méthode authenticate
     @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
+    public AuthenticationManager authenticationManager() {
         return new AuthenticationManager() {
             @Override
             public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -105,6 +103,7 @@ public class SecurityConfig {
     }
 
     //Instancie un AuthenticationProvider pour notre AuthenticationManager
+    //L'implémentation DaoAuthenticationProvider a besoin d'un UserDetailsService et d'un PasswordEncoder
     @Bean
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -115,7 +114,7 @@ public class SecurityConfig {
 
     //Instancie un userDetailsService, qui est juste un DAO qui a accès uniquement à findByLogin
     //Il sert à récupérer en base l'utilisateur que l'on compare avec les Credentials qui sont dans les objets d'Authentication
-    //Que l'on passe en paramètre de la méthode authenticate que l'on donne à nos classes d'authentification
+    //que l'on passe en paramètre de la méthode authenticate que l'on donne à nos classes d'authentification
     @Bean
     UserDetailsService userDetailsService() {
         return login -> employeRepository.findByLogin(login)

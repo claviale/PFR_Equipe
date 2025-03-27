@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import fr.patedor.PFR_Equipe.repository.EmployeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    EmployeRepository employeRepository;
+    private EmployeRepository employeRepository;
 
     //nom de méthode héritée de OncePerRequestFilter
     public void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Check si on a un header qui commence par "Bearer " car le token suit
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwtToken = authHeader.substring(7); // On récupère juste le token
-            login = jwtService.extractUserName(jwtToken);
+            login = jwtService.extractLogin(jwtToken);
         }
 
         // Si on a un utilisateur, mais qu'il n'est pas encore connecté
@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        // Puis on continue dans la chaine de nos filtres
+        // Puis, on continue dans la chaine de nos filtres
         filterChain.doFilter(request, response);
 
     }

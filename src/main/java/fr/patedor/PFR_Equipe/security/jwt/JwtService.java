@@ -48,15 +48,15 @@ public class JwtService {
     }
 
     // Extraire le login du token
-    public String extractUserName(String token) {
+    public String extractLogin(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Générer le token JWT
+    // Générer le token JWT avec des attributs en plus de ceux du UserDetails
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
                 .builder()
-                .setClaims(extraClaims)
+                .setClaims(extraClaims) // attributs en plus
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) //Valide 1heure
@@ -64,6 +64,7 @@ public class JwtService {
                 .compact();
     }
 
+    // Générer le token JWT sans attributs supplémentaires
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
@@ -71,7 +72,7 @@ public class JwtService {
 
     // Validation du token
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUserName(token);
+        final String username = extractLogin(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
