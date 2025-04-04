@@ -8,7 +8,9 @@ public interface EmployeService {
 
     List<Employe> findFromRestaurant(Integer id);
 
+    Employe findById(Integer id);
+
     void delete(Integer idEmploye);
 
-    void addUtilisateur(Employe aAjouter);
+    void addEmploye(Employe aAjouter);
 }
