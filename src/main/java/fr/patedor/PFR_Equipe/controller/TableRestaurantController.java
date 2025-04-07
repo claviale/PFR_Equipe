@@ -91,6 +91,14 @@ public class TableRestaurantController {
             }
         return ResponseEntity.ok(resaAAccepter);
     }
+    
+    @GetMapping("/all/{idRestaurant}")
+    public List<TableRestaurantDTO> getToutesLesTables(@PathVariable Integer idRestaurant) {
+        List<TableRestaurant> tables = tableService.getAllByRestaurantId(idRestaurant);
+        return tables.stream()
+                .map(table -> tableMapper.toDTO(table))
+                .collect(Collectors.toList());
+    }
 
     @GetMapping("/occupees/{idRestaurant}")
     public List<TableRestaurantDTO> getTablesOccupees(@PathVariable Integer idRestaurant) {

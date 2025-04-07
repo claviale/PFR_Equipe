@@ -84,7 +84,7 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 
 	public boolean estLibre(TableRestaurant table, List<Reservation> reservations, LocalDateTime heureResa) {
         LocalDateTime finResa = heureResa.plusHours(2).plusMinutes(30);
-
+        
         for (Reservation res : reservations) {
             if (res.getTable() != null && res.getTable().getIdTableRestaurant().equals(table.getIdTableRestaurant())) {
                 LocalDateTime debut = res.getHoraireReservation();
