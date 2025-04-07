@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -37,6 +38,7 @@ public class AdminController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @CrossOrigin
     @GetMapping
     public ResponseEntity<List<RestaurantDTO>> getAll() {
         List<RestaurantDTO> restaurants = restaurantService.findAll().stream()
@@ -44,6 +46,7 @@ public class AdminController {
                 .collect(Collectors.toList());
         return  ResponseEntity.ok(restaurants);
     }
+
 
     @GetMapping("/{id_restaurant}")
     public ResponseEntity<List<EmployeDTO>> getEmployes(@PathVariable("id_restaurant") Integer idRestaurant) {
@@ -53,6 +56,7 @@ public class AdminController {
         return ResponseEntity.ok(employes);
     }
 
+    @CrossOrigin
     @PostMapping("/{id_restaurant}")
     public ResponseEntity<EmployeDTO> addEmploye(@RequestBody EmployeDTO utilisateur, @PathVariable("id_restaurant") Integer idRestaurant) {
         Optional<Restaurant> restaurant = restaurantService.findById(idRestaurant);
@@ -70,7 +74,7 @@ public class AdminController {
         return ResponseEntity.ok(employeMapper.toDTO(aAjouter));
     }
 
-
+    @CrossOrigin
     @PutMapping("/{id_restaurant}/{id_employe}")
     public ResponseEntity<EmployeDTO> updateEmploye(@PathVariable("id_restaurant") Integer idRestaurant, @PathVariable("id_employe") Integer idEmploye, @RequestBody EmployeDTO employe){
         Optional<Restaurant> restaurant = restaurantService.findById(idRestaurant);
@@ -87,7 +91,7 @@ public class AdminController {
         return ResponseEntity.ok(employeMapper.toDTO(aModifier));
     }
 
-
+    @CrossOrigin
     @DeleteMapping("/{id_restaurant}/{id_employe}")
     public void deleteEmploye(@PathVariable("id_employe") Integer idEmploye) {
         employeService.delete(idEmploye);

@@ -27,6 +27,9 @@ public class AuthenticationService {
         String jwtToken = jwtService.generateToken(employe);
         AuthenticationResponse authResponse = new AuthenticationResponse();
         authResponse.setToken(jwtToken);
+        if("EMP".equals(employe.getRole().getId())){
+            authResponse.setIdRestaurant(employe.getRestaurant().getIdRestaurant());
+        }
 
         //Ajoute l'utilisateur connecté au contexte de sécurité
         SecurityContextHolder.getContext().setAuthentication(authentication);
