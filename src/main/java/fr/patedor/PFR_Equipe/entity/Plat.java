@@ -31,8 +31,5 @@ public class Plat {
 	@ManyToOne
 	@JoinColumn(name = "id_categorie")
 	private Categorie categorie;
-	
-	@OneToMany(mappedBy = "plat")
-	private List<AssoCommandesPlats> assoCommandesPlats;
 
 }
