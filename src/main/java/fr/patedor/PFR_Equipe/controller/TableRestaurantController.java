@@ -22,6 +22,7 @@ import fr.patedor.PFR_Equipe.entity.TableRestaurant;
 import fr.patedor.PFR_Equipe.mapper.TableRestaurantMapper;
 import fr.patedor.PFR_Equipe.service.TableRestaurantServiceImpl;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/tables")
 public class TableRestaurantController {
