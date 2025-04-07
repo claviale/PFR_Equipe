@@ -73,7 +73,8 @@ public class TableRestaurantController {
     //Si la résa est en base, on l'associe juste à la table et on la passe en "Présent"
     //Le statut de la table (libre ou occupée) est en fait géré par la requête estLibre de Quentin
     @PutMapping("/{id_table}")
-    public ResponseEntity<ReservationDTO> accepterResa(@PathVariable("id_table") Integer idTable, @RequestBody ReservationDTO resaAAccepter){
+    public ResponseEntity<ReservationDTO> accepterResa(@PathVariable("id_table") Integer idTable,
+                                                       @RequestBody ReservationDTO resaAAccepter){
 
             Reservation resa = reservationMapper.toEntity(resaAAccepter);
             Optional<Restaurant> restaurant = restaurantService.findById(resaAAccepter.getIdRestaurant());

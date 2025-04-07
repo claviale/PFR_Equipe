@@ -67,7 +67,8 @@ public class ReservationController {
     //renvoie la liste des tables libres et avec le bon nombre de places
     //pour pouvoir en associer une à une réservation "en attente"
     @GetMapping("/{id_restaurant}/{id_reservation}")
-    public ResponseEntity<List<TableRestaurantDTO>> tablesPourResa(@PathVariable("id_restaurant") Integer idRestau, @PathVariable("id_reservation") Integer idResa){
+    public ResponseEntity<List<TableRestaurantDTO>> tablesPourResa(@PathVariable("id_restaurant") Integer idRestau,
+                                                                   @PathVariable("id_reservation") Integer idResa){
         Reservation resaAValider = reservationService.getById(idResa);
 
         List<TableRestaurantDTO> tables = tableRestaurantService.getTablesLibres(idRestau, resaAValider.getHoraireReservation())
@@ -81,7 +82,9 @@ public class ReservationController {
 
     //une fois la table sélectionnée, on l'ajoute à la résa et on passe celle-ci en "Confirmée"
     @PutMapping("/{id_restaurant}/{id_reservation}")
-    public ResponseEntity<ReservationDTO> accepterReservation(@PathVariable("id_restaurant") Integer idRestau, @PathVariable("id_reservation") Integer idResa, @RequestBody TableRestaurantDTO table) {
+    public ResponseEntity<ReservationDTO> accepterReservation(@PathVariable("id_restaurant") Integer idRestau,
+                                                              @PathVariable("id_reservation") Integer idResa,
+                                                              @RequestBody TableRestaurantDTO table) {
         Reservation reservation = reservationService.getById(idResa);
         TableRestaurant tableAAjouter = tableRestaurantService.selectByNumeroTableAndIdRestaurant(table.getNumeroTable(), idRestau);
 
