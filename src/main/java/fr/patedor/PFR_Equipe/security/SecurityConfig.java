@@ -77,6 +77,7 @@ public class SecurityConfig {
             csrf.disable();
         });
 
+        
         //Connexion de l'utilisateur
         http.authenticationManager(authenticationManager());
 
@@ -88,6 +89,7 @@ public class SecurityConfig {
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         });
 
+        
         return http.build();
     }
 
