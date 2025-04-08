@@ -11,4 +11,5 @@ public interface CommandeService {
 	public Commande getById(Integer id);
 	public List<Commande> getCommandesByStatut(String statut);
 	public void delete(Integer id);
+	Commande findByReservationId(Integer idReservation);
 }
