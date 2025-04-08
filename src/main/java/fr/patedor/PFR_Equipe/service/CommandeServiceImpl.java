@@ -46,6 +46,11 @@ public class CommandeServiceImpl implements CommandeService {
 	public void delete(Integer id) {
 		commandeRepo.deleteById(id);
 	}
+
+	@Override
+	public Commande findByReservationId(Integer idReservation) {
+		return commandeRepo.findByReservation_IdReservation(idReservation);
+	}
 	
 	
 }

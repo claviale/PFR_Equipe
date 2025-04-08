@@ -103,6 +103,22 @@ public class CommandeController {
 	    return ResponseEntity.ok(commandeDTO);
 	}
 	
+	//Récupérer la réservation d'une table et sa commande associée
+	@GetMapping("/par-table/{idTable}")
+	public ResponseEntity<CommandeDto> getCommandeParTable(@PathVariable Integer idTable) {
+	    Reservation reservation = reservationService
+	        .getByTableIdAndStatutPresent(idTable);
+	    if (reservation == null) {
+	        return ResponseEntity.noContent().build();
+	    }
+	    Commande commande = commandeService.findByReservationId(reservation.getIdReservation());
+	    if (commande == null) {
+	        return ResponseEntity.noContent().build();
+	    }
+	    CommandeDto commandeDto = commandeMapper.toDto(commande);
+	    return ResponseEntity.ok(commandeDto);
+	}
+	
 	// Afficher les détails d'une commande (clic sur la table ou lors de la facturation)
 	@GetMapping("/{id}")
 	public ResponseEntity<CommandeDto> getCommande(@PathVariable("id") Integer id) {
