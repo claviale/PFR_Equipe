@@ -44,6 +44,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> {
             auth
+            		.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     // login (tout le monde y a accès)
                     .requestMatchers("/login").permitAll()
 
