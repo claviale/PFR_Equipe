@@ -17,6 +17,7 @@ import fr.patedor.PFR_Equipe.mapper.ReservationMapper;
 import fr.patedor.PFR_Equipe.mapper.RestaurantMapper;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/reservations")
 public class ReservationController {
 	
@@ -64,6 +65,12 @@ public class ReservationController {
         reservationService.create(nouvelleResa);
     }
 
+    @GetMapping("/reservation/{idReservation}")
+    public ResponseEntity<ReservationDTO> getReservationById(@PathVariable Integer idReservation) {
+        Reservation reservation = reservationService.getById(idReservation);
+        return ResponseEntity.ok(reservationMapper.toDTO(reservation));
+    }
+    
     //renvoie la liste des tables libres et avec le bon nombre de places
     //pour pouvoir en associer une à une réservation "en attente"
     @GetMapping("/{id_restaurant}/{id_reservation}")
