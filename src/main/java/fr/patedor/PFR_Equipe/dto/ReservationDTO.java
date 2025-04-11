@@ -1,6 +1,6 @@
 package fr.patedor.PFR_Equipe.dto;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ public class ReservationDTO {
     private Integer id;
     private String nomClient;
     private Integer numeroTable;
-    private LocalDateTime horaireReservation;
+    private ZonedDateTime horaireReservation;
     private Integer nbPersonne;
     private String statut;
     private Integer idRestaurant;

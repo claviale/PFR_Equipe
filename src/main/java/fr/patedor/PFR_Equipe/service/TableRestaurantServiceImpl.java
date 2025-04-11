@@ -1,6 +1,9 @@
 package fr.patedor.PFR_Equipe.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.chrono.ChronoZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,21 +45,21 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 	public List<TableRestaurant> getTablesLibres(Integer idRestaurant, LocalDateTime heureResa, Integer nbPersonne) {
         List<TableRestaurant> tables = repo.findByNbPlacesAndIdRestaurant(idRestaurant, nbPersonne);
 
-		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant);
+		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant, ZonedDateTime.now(ZoneId.of("Europe/Paris")));
 
         return tables.stream()
-                .filter(table -> estLibre(table, reservations, heureResa))
+                .filter(table -> estLibre(table, reservations))
                 .collect(Collectors.toList());
 	}
 
 	@Override
-	public List<TableRestaurant> getTablesLibres(Integer idRestaurant, LocalDateTime heureResa) {
+	public List<TableRestaurant> getTablesLibres(Integer idRestaurant, ZonedDateTime heureResa) {
         List<TableRestaurant> tables = repo.findAllByRestaurantId(idRestaurant);
         
-		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant);
+		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant, ZonedDateTime.now(ZoneId.of("Europe/Paris")));
 
         return tables.stream()
-                .filter(table -> estLibre(table, reservations, heureResa))
+                .filter(table -> estLibre(table, reservations))
                 .collect(Collectors.toList());
 	}
 
@@ -64,10 +67,10 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 	public List<TableRestaurant> getTablesLibresMaintenant(Integer idRestaurant, Integer nbPersonne) {
         List<TableRestaurant> tables = repo.findByNbPlacesAndIdRestaurant(idRestaurant, nbPersonne);
 
-		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant);
+		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant, ZonedDateTime.now(ZoneId.of("Europe/Paris")));
 
         return tables.stream()
-                .filter(table -> estLibre(table, reservations, LocalDateTime.now()))
+                .filter(table -> estLibre(table, reservations))
                 .collect(Collectors.toList());
 	}
 
@@ -75,29 +78,30 @@ public class TableRestaurantServiceImpl implements TableRestaurantService {
 	public List<TableRestaurant> getTablesOccupees(Integer idRestaurant) {
         List<TableRestaurant> tables = repo.findAllByRestaurantId(idRestaurant);
 
-		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant);
+		List<Reservation> reservations = reservationRepository.findAllByRestaurant(idRestaurant, ZonedDateTime.now(ZoneId.of("Europe/Paris")));
 
         return tables.stream()
-                .filter(table -> !estLibre(table, reservations, LocalDateTime.now()))
+                .filter(table -> !estLibre(table, reservations))
                 .collect(Collectors.toList());
 	}
+	
+	
+	public boolean estLibre(TableRestaurant table, List<Reservation> reservations) {
+	    ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Paris"));
+	   
+	    for (Reservation res : reservations) {
+	        if (res.getTable() != null && res.getTable().getIdTableRestaurant().equals(table.getIdTableRestaurant())) {
+	            
+	        	ZonedDateTime debut = res.getHoraireReservation();  
+	            ZonedDateTime fin = debut.plusHours(2).plusMinutes(30);
 
-	public boolean estLibre(TableRestaurant table, List<Reservation> reservations, LocalDateTime heureResa) {
-        LocalDateTime finResa = heureResa.plusHours(2).plusMinutes(30);
-        
-        for (Reservation res : reservations) {
-            if (res.getTable() != null && res.getTable().getIdTableRestaurant().equals(table.getIdTableRestaurant())) {
-                LocalDateTime debut = res.getHoraireReservation();
-                LocalDateTime fin = debut.plusHours(2).plusMinutes(30);
-
-                // Si la réservation existe dans la même plage horaire, la table n'est pas libre
-                if (debut.isBefore(finResa) && fin.isAfter(heureResa)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+	            boolean isBetweenStartAndEnd = (now.isAfter(debut) || now.isEqual(debut)) && (now.isBefore(fin) || now.isEqual(fin));
+	            if (isBetweenStartAndEnd && (res.getStatut().equals("Présent") || res.getStatut().equals("Confirmée"))) {
+	                System.out.println("Table occupée: " + table.getIdTableRestaurant());
+	                return false;
+	            }
+	        }
+	    }
+	    return true; 
 	}
-
 }

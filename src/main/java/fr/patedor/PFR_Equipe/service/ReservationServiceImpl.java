@@ -1,5 +1,7 @@
 package fr.patedor.PFR_Equipe.service;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ public class ReservationServiceImpl implements ReservationService {
 	}
     
     public List<Reservation> getAllReservationsForRestaurant(Integer idRestaurant) {
-        return reservationRepository.findAllByRestaurant(idRestaurant);
+        return reservationRepository.findAllByRestaurant(idRestaurant, ZonedDateTime.now(ZoneId.of("Europe/Paris")));
     }
 
 

@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import fr.patedor.PFR_Equipe.dto.TableRestaurantDTO;
 import fr.patedor.PFR_Equipe.entity.TableRestaurant;
+import fr.patedor.PFR_Equipe.entity.Utilisateur;
 import fr.patedor.PFR_Equipe.mapper.TableRestaurantMapper;
 import fr.patedor.PFR_Equipe.service.TableRestaurantServiceImpl;
+import fr.patedor.PFR_Equipe.service.UtilisateurService;
 
 @RestController
 @RequestMapping("/tables")
@@ -40,6 +42,9 @@ public class TableRestaurantController {
 
     @Autowired
     RestaurantService restaurantService;
+    
+    @Autowired
+    UtilisateurService utilisateurService;
 
     @GetMapping("/libres/{idRestaurant}")
     public List<TableRestaurantDTO> getTablesLibres(
@@ -76,19 +81,29 @@ public class TableRestaurantController {
     public ResponseEntity<ReservationDTO> accepterResa(@PathVariable("id_table") Integer idTable,
                                                        @RequestBody ReservationDTO resaAAccepter){
 
-            Reservation resa = reservationMapper.toEntity(resaAAccepter);
-            Optional<Restaurant> restaurant = restaurantService.findById(resaAAccepter.getIdRestaurant());
-            restaurant.ifPresent(resa::setRestaurant);
-            //cas avec résa, il faut passer le statut à "Présent" manuellement
-            if(!"sans_resa".equalsIgnoreCase(resaAAccepter.getNomClient())){
-                resaAAccepter.setStatut("Présent");
-            }
-            resa.setTable(tableService.getById(idTable));
-            reservationService.create(resa);
-            //cas sans résa, il faut rajouter l'ID au DTO car la résa n'était pas déjà en base
-            if("sans_resa".equalsIgnoreCase(resaAAccepter.getNomClient())) {
-                resaAAccepter.setId(resa.getIdReservation());
-            }
+    	Reservation resa = reservationMapper.toEntity(resaAAccepter);
+
+        Optional<Restaurant> restaurant = restaurantService.findById(resaAAccepter.getIdRestaurant());
+        restaurant.ifPresent(resa::setRestaurant);
+
+        // Associer la table
+        resa.setTable(tableService.getById(idTable));
+
+        // Cas sans réservation = nomClient "Sans"
+        if ("sans_resa".equalsIgnoreCase(resaAAccepter.getNomClient())) {
+            Utilisateur utilisateurParDefaut = utilisateurService.selectByNom("Sans");
+            resa.setClient(utilisateurParDefaut);
+
+            resaAAccepter.setId(resa.getIdReservation());
+        } else {
+            // Cas avec réservation = nom du vrai client
+            Utilisateur utilisateur = utilisateurService.selectByNom(resaAAccepter.getNomClient());
+            resa.setClient(utilisateur);
+        }
+
+        resa.setStatut("Présent");
+        reservationService.create(resa);
+
         return ResponseEntity.ok(resaAAccepter);
     }
     
@@ -99,15 +114,15 @@ public class TableRestaurantController {
                 .map(table -> tableMapper.toDTO(table))
                 .collect(Collectors.toList());
     }
-
+    
     @GetMapping("/occupees/{idRestaurant}")
     public List<TableRestaurantDTO> getTablesOccupees(@PathVariable Integer idRestaurant) {
+    	List<TableRestaurant> tablesOccupees = tableService.getTablesOccupees(idRestaurant);
 
-        List<TableRestaurant> tablesOccupees = tableService.getTablesOccupees(idRestaurant);
-
-        // Convertir les entités en DTOs
         return tablesOccupees.stream()
                 .map(table -> tableMapper.toDTO(table))
                 .collect(Collectors.toList());
     }
+
+    
 }
