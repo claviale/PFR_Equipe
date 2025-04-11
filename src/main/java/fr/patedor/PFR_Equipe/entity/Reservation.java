@@ -1,6 +1,6 @@
 package fr.patedor.PFR_Equipe.entity;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,7 +38,7 @@ public class Reservation {
 	private TableRestaurant table;
 
 	@Column(name = "horaire_reservation")
-	private LocalDateTime horaireReservation;
+	private ZonedDateTime horaireReservation;
 	
 	@Column(name = "nombre_personnes")
 	private Integer nbPersonne;
